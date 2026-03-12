@@ -1,26 +1,32 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <!-- WCAG: responsive scaling -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
 
-    <link rel="stylesheet" href="styles/style.css" />
-    <title>Listener</title>
-  </head>
+  <!-- WCAG: responsive scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ARIA landmark for screen reader navigation -->
-  <body role="main">
+  <link rel="stylesheet" href="styles/style.css" />
+  <title>Listener</title>
+</head>
+
+<!-- ARIA landmark for screen reader navigation -->
+
+<body role="main">
+  <div class="center_content">
+
     <!-- Live region for spoken updates in French -->
-    <div aria-live="polite" id="status-server" class="sr-only" lang="fr">
+    <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
       En attente du début de la démonstration du passage piéton.
-    </div>
+    </p>
 
     <h1 id="server-heading">Vous êtes dans serveur 12345</h1>
 
     <p aria-labelledby="server-heading">
       Veuillez attendre que le créateur du serveur commence la démonstration
     </p>
-  </body>
+  </div>
+</body>
+
 </html>

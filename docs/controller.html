@@ -1,56 +1,56 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
 
     <!-- WCAG: Ensures responsive scaling for accessibility -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="styles/style.css" />
+    <script src="js/index.js"></script>
     <title>Controller</title>
-  </head>
+</head>
 
-  <!-- ARIA landmark role for screen readers -->
-  <body role="main">
+<!-- ARIA landmark role for screen readers -->
+
+<body role="main">
+    <!-- music -->
+    <audio id="myAudio">
+        <source src="audio/canadian_melody.wav" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
     <!-- ARIA live region to announce actions such as playing sounds -->
     <div aria-live="polite" id="audio-status" class="sr-only"></div>
+    <div class="center_content">
+        <!-- Accessible button with ARIA label describing the action -->
+        <button type="button" aria-label="Jouer la mélodie du signal sonore de passage piéton" class="play">
+            Jouez
+        </button>
 
-    <!-- Accessible button with ARIA label describing the action -->
-    <button
-      type="button"
-      aria-label="Jouer la mélodie du signal sonore de passage piéton"
-    >
-      Jouez
-    </button>
+        <!-- Accessible replay button -->
+        <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" class="replay">
+            Rejouez
+        </button>
 
-    <!-- Accessible replay button -->
-    <button
-      type="button"
-      aria-label="Rejouer la mélodie du signal sonore de passage piéton"
-    >
-      Rejouez
-    </button>
+        <!-- Section heading for melody selection -->
+        <h1 id="melody-heading">Changez La Melodie</h1>
 
-    <!-- Section heading for melody selection -->
-    <h1 id="melody-heading">Changez La Melodie</h1>
+        <!-- Grouping related controls improves screen reader navigation -->
+        <div role="group" aria-labelledby="melody-heading">
+            <!-- Canadian crosswalk melody -->
+            <button type="button" aria-label="Sélectionner la mélodie canadienne du passage piéton" class="music">
+                La Melodie Canadienne
+            </button>
 
-    <!-- Grouping related controls improves screen reader navigation -->
-    <div role="group" aria-labelledby="melody-heading">
-      <!-- Canadian crosswalk melody -->
-      <button
-        type="button"
-        aria-label="Sélectionner la mélodie canadienne du passage piéton"
-      >
-        La Melodie Canadienne
-      </button>
-
-      <!-- Beep beep melody -->
-      <button
-        type="button"
-        aria-label="Sélectionner la mélodie bip bip du passage piéton"
-      >
-        Beep Beep
-      </button>
+            <!-- Beep beep melody -->
+            <button type="button" aria-label="Sélectionner la mélodie bip bip du passage piéton" class="music">
+                La Melodie Beep Beep
+            </button>
+        </div>
     </div>
-  </body>
+
+</body>
+
 </html>
