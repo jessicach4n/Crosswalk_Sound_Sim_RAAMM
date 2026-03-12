@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="fr"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">
-    <title>Home</title>
+    <title>Se connecter à d'autres appareils</title>
 </head>
 <body>
-    <h1>Se connecter à d’autres appareils</h1>
-    <p>Créez votre serveur:</p>
-    <a href="waiting-room.html"> <button>Créer un serveur</button></a>
+    <h1>Se connecter à d'autres appareils</h1>
+    
+    <p id="create-label">Créez votre serveur :</p>
+    <a href="waiting-room.html" role="button" aria-labelledby="create-label">Créer un serveur</a>
    
-    <p>Ou</p>
-    <p>Entrer le numéro du serveur:</p>
-    <input type="text" placeholder="Entere numéro du serveur...">
-</body>
+    <p aria-hidden="true">Ou</p> <p id="server-num-label">Entrer le numéro du serveur :</p>
+    <input 
+        type="text" 
+        id="server-input"
+        placeholder="Entrez le numéro du serveur..." 
+        aria-labelledby="server-num-label" 
+        aria-required="true"> </body>
 </html>
