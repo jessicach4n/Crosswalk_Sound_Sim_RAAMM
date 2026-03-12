@@ -1,18 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/style.css">
-    <title>Controller</title>
-</head>
-<body>
-        <button> Jouez</button>
-       <button>Rejouez</button>
-        
-        <h1>Changez La Melodie</h1>
+  <head>
+    <meta charset="UTF-8" />
 
-        <button>La Melodie Canadienne</button>
-        <button>Beep Beep</button>
-</body>
+    <!-- WCAG: Ensures responsive scaling for accessibility -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="styles/style.css" />
+    <title>Controller</title>
+  </head>
+
+  <!-- ARIA landmark role for screen readers -->
+  <body role="main">
+    <!-- ARIA live region to announce actions such as playing sounds -->
+    <div aria-live="polite" id="audio-status" class="sr-only"></div>
+
+    <!-- Accessible button with ARIA label describing the action -->
+    <button
+      type="button"
+      aria-label="Jouer la mélodie du signal sonore de passage piéton"
+    >
+      Jouez
+    </button>
+
+    <!-- Accessible replay button -->
+    <button
+      type="button"
+      aria-label="Rejouer la mélodie du signal sonore de passage piéton"
+    >
+      Rejouez
+    </button>
+
+    <!-- Section heading for melody selection -->
+    <h1 id="melody-heading">Changez La Melodie</h1>
+
+    <!-- Grouping related controls improves screen reader navigation -->
+    <div role="group" aria-labelledby="melody-heading">
+      <!-- Canadian crosswalk melody -->
+      <button
+        type="button"
+        aria-label="Sélectionner la mélodie canadienne du passage piéton"
+      >
+        La Melodie Canadienne
+      </button>
+
+      <!-- Beep beep melody -->
+      <button
+        type="button"
+        aria-label="Sélectionner la mélodie bip bip du passage piéton"
+      >
+        Beep Beep
+      </button>
+    </div>
+  </body>
 </html>
