@@ -2,14 +2,44 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- WCAG: responsive scaling -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="styles/style.css" />
     <script src="js/index.js"></script>
+
     <title>Waiting Room</title>
   </head>
-  <body>
-    <p>Voici votre numéro de server:</p>
-    <p id="room-code"></p>
-    <a href="controller.html" id="btn-wait-room">Attendez</a>
+
+  <!-- ARIA landmark to help screen reader navigation -->
+  <body role="main">
+    <!-- Live region for audible updates in French -->
+    <div aria-live="polite" id="room-status" class="sr-only" lang="fr">
+      Votre numéro de serveur est affiché ci-dessous.
+    </div>
+
+    <!-- Label for the room code -->
+    <p id="room-label">Voici votre numéro de server:</p>
+
+    <!-- Dynamic room code with accessibility attributes -->
+    <p
+      id="room-code"
+      role="status"
+      aria-live="polite"
+      aria-labelledby="room-label"
+      lang="fr"
+    ></p>
+
+    <!-- Link styled as button for waiting -->
+    <a
+      href="controller.html"
+      id="btn-wait-room"
+      role="button"
+      aria-label="Attendre que le créateur du serveur commence la démonstration"
+      lang="fr"
+    >
+      Attendez
+    </a>
   </body>
 </html>

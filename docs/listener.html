@@ -2,12 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- WCAG: responsive scaling -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="styles/style.css" />
     <title>Listener</title>
   </head>
-  <body>
-    <h1>Vous êtes dans serveur 12345</h1>
-    <p>Veuliez attendre que le créateur du serveur commence la démonstration</p>
+
+  <!-- ARIA landmark for screen reader navigation -->
+  <body role="main">
+    <!-- Live region for spoken updates in French -->
+    <div aria-live="polite" id="status-server" class="sr-only" lang="fr">
+      En attente du début de la démonstration du passage piéton.
+    </div>
+
+    <h1 id="server-heading">Vous êtes dans serveur 12345</h1>
+
+    <p aria-labelledby="server-heading">
+      Veuillez attendre que le créateur du serveur commence la démonstration
+    </p>
   </body>
 </html>
