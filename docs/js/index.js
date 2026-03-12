@@ -8,4 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         waitRoomBtn.textContent = "Suivant";
     }, 2000)
+
 })
+
