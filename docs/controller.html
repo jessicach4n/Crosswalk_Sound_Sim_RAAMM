@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="styles/style.css" />
-    <script src="js/index.js"></script>
+    <!-- <script src="js/index.js"></script> -->
     <title>Controller</title>
 </head>
 
@@ -17,7 +17,7 @@
 <body role="main">
     <!-- music -->
     <audio id="myAudio">
-        <source src="audio/canadian_melody.wav" type="audio/ogg">
+        <source src="audio/canadian_melody.wav" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
 
@@ -51,6 +51,35 @@
         </div>
     </div>
 
+<script>
+ const audio = document.getElementById("myAudio");
+const playPauseBtn = document.querySelector(".play");
+const audioStatus = document.getElementById("audio-status");
+const replayBtn = document.querySelector(".replay");
+
+playPauseBtn.addEventListener("click", () => {
+    if (audio.paused) {
+        audio.play();
+        playPauseBtn.textContent = "Pause";       // change button text
+        playPauseBtn.classList.remove("paused");
+    } else {
+        audio.pause();
+        playPauseBtn.textContent = "Jouez";       // change button text
+        playPauseBtn.classList.add("paused");
+    }
+});
+
+// Optional: when audio ends, reset button text
+audio.addEventListener("ended", () => {
+    playPauseBtn.textContent = "Jouez";
+});
+
+// Replay on click
+replayBtn.addEventListener("click", () => {
+    audio.currentTime = 0;
+    audio.play();
+});
+</script>
 </body>
 
 </html>
