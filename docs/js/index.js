@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const audio = new Audio("audio/canadian_melody.wav")
   const playPauseBtn = document.getElementById("play-btn");
   const audioStatus = document.getElementById("audio-status");
-  const replayBtn = document.querySelector("replay-btn");
+  const replayBtn = document.getElementById("replay-btn");
 
   playPauseBtn.addEventListener("click", () => {
     if (audio.paused) {
