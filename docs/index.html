@@ -10,20 +10,20 @@
     <title>Simulateur RAAMM</title>
   </head>
 
-  <body>
-    <header></header>
-    <nav></nav>
-
-    <main>
+  <body class="app-container">
+    <main class="screen">
       
-      <section id="landing">
-        <h1>Landing Page</h1>
+      <section id="landing" class="landing-page">
+        <h1>SIMULATION DES FEUX SONORES</h1>
+        <p>Le but de ce projet est de simuler des passages pour piétons auditives pour les ateliers et les démonstrations de la RAAMM.</p>
+        <p></p>
+        <p></p>
+        <button>Commencer</button>
       </section>
 
-      <!-- LANDING PAGE -->
       <!-- RENAME TO PROPER ID NAME -->
-      <section id="index" class="hidden">
-        <div class="center_content">
+      <section id="index" class="home-page hidden">
+        <div class="center-content">
           <h1>Se connecter à d'autres appareils</h1>
 
           <p id="create-label">Créez votre serveur :</p>
@@ -62,21 +62,15 @@
           ></p>
 
           <!-- Link styled as button for waiting -->
-           <button id="wait-room-btn">btn-wait-room</button>
+           <button id="wait-room-btn">Wait</button>
 
         </div>
       </section>
 
       <section id="controller" class="hidden">
-        <!-- music -->
-        <audio id="my-audio">
-          <source src="audio/canadian_melody.wav" type="audio/wav" />
-          Your browser does not support the audio element.
-        </audio>
-
         <!-- ARIA live region to announce actions such as playing sounds -->
         <div aria-live="polite" id="audio-status" class="sr-only"></div>
-        <div class="center_content">
+        <div class="center-content">
           <!-- Accessible button with ARIA label describing the action -->
           <button
             type="button"
@@ -141,6 +135,8 @@
 
     </main>
 
-    <footer></footer>
+    <footer>
+      <img src="assets/logo.png" alt="logo">
+    </footer>
   </body>
 </html>

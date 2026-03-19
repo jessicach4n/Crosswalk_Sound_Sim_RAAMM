@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   /*SIMULATE SERVER CODE TO DELETE */
   const roomCodeContainer = document.getElementById("room-code");
-  const waitRoomBtn = document.getElementById("btn-wait-room");
+  const waitRoomBtn = document.getElementById("wait-room-btn");
 
   const roomCode = String(Math.floor(Math.random() * 100000)).padStart(5, "0");
   roomCodeContainer.textContent = roomCode;
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* AUDIO */
-  const audio = document.getElementById("my-audio");
+  const audio = new Audio("audio/canadian_melody.wav")
   const playPauseBtn = document.getElementById("play-btn");
   const audioStatus = document.getElementById("audio-status");
   const replayBtn = document.querySelector("replay-btn");
