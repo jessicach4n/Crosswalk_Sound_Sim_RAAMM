@@ -20,7 +20,7 @@ section {
 
 /* Uncomment when pages are done */
 .hidden {
-    /* display: none; */
+    display: none;
 }
 
 footer {
@@ -79,6 +79,8 @@ button {
     font-weight: 700;
     text-decoration: none;
     margin-bottom: 30px;
+
+    cursor: pointer;
 }
 
 .play{

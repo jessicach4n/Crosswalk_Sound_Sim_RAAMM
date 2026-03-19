@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles/style.css" />
 
-    <script src="js/index.js"></script>
+    <script src="js/index.js" defer></script>
     <script src="js/client.js" defer></script>
     <title>Simulateur RAAMM</title>
   </head>
@@ -14,17 +14,17 @@
     <main class="screen">
       
       <section id="landing" class="landing-page">
-        <h1>SIMULATION DES FEUX SONORES</h1>
+        <h1 id="landing-heading">SIMULATION DES FEUX SONORES</h1>
         <p>Le but de ce projet est de simuler des passages pour piétons auditives pour les ateliers et les démonstrations de la RAAMM.</p>
         <p></p>
         <p></p>
-        <button>Commencer</button>
+        <button id="start-btn">Commencer</button>
       </section>
 
       <!-- RENAME TO PROPER ID NAME -->
-      <section id="index" class="home-page hidden">
+      <section id="home" class="home-page hidden">
         <div class="center-content">
-          <h1>Se connecter à d'autres appareils</h1>
+          <h1 id="home-heading">Se connecter à d'autres appareils</h1>
 
           <p id="create-label">Créez votre serveur :</p>
           <button id="create-server-btn">Créer un serveur</button>

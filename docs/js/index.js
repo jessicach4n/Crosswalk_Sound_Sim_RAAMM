@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+
   /*SIMULATE SERVER CODE TO DELETE */
   const roomCodeContainer = document.getElementById("room-code");
   const waitRoomBtn = document.getElementById("wait-room-btn");
@@ -49,4 +49,4 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.play();
   });
 
-});
+
