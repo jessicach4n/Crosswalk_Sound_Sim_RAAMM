@@ -1,42 +1,50 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const roomCodeContainer = document.getElementById("room-code");
-    const waitRoomBtn = document.getElementById("btn-wait-room");
+  /*SIMULATE SERVER CODE TO DELETE */
+  const roomCodeContainer = document.getElementById("room-code");
+  const waitRoomBtn = document.getElementById("btn-wait-room");
 
-    const roomCode = String(Math.floor(Math.random() * 100000)).padStart(5, "0");
-    roomCodeContainer.textContent = roomCode;
+  const roomCode = String(Math.floor(Math.random() * 100000)).padStart(5, "0");
+  roomCodeContainer.textContent = roomCode;
 
-    setTimeout(() => {
-        waitRoomBtn.textContent = "Suivant";
-    }, 2000)
+  setTimeout(() => {
+    waitRoomBtn.textContent = "Suivant";
+  }, 2000);
 
-    //display server nb according to user input
-    let server_nb_input;
+  //display server nb according to user input
+  let server_nb_input;
+  document.getElementById("Submit").onclick = function () {
+    server_nb_input = document.getElementById("server-input").value;
+    console.log(server_nb_input);
+    document.getElementById("server-nb").textContent = server_nb_input;
+  };
 
-    document.getElementById("Submit").onclick=function(){
-        server_nb_input= document.getElementById("server-input").value;
-        console.log(server_nb_input);
-        document.getElementById("server-nb").textContent=server_nb_input;
-    };
+  /* AUDIO */
+  const audio = document.getElementById("myAudio");
+  const playPauseBtn = document.querySelector(".play");
+  const audioStatus = document.getElementById("audio-status");
+  const replayBtn = document.querySelector(".replay");
 
-    //play music
-    // Select audio element and play button
-const audio = document.getElementById("myAudio");
-const playBtn = document.querySelector(".play");
-const replayBtn = document.querySelector(".replay");
+  playPauseBtn.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.textContent = "Pause"; // change button text
+      playPauseBtn.classList.remove("paused");
+    } else {
+      audio.pause();
+      playPauseBtn.textContent = "Jouez"; // change button text
+      playPauseBtn.classList.add("paused");
+    }
+  });
 
-// Play on click
-playBtn.addEventListener("click", () => {
-    audio.play();
-});
+  // Optional: when audio ends, reset button text
+  audio.addEventListener("ended", () => {
+    playPauseBtn.textContent = "Jouez";
+  });
 
-// Replay on click
-replayBtn.addEventListener("click", () => {
+  // Replay on click
+  replayBtn.addEventListener("click", () => {
     audio.currentTime = 0;
     audio.play();
+  });
+
 });
-
-
-})
-
-
-
