@@ -12,17 +12,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //display server nb according to user input
   let server_nb_input;
-  document.getElementById("Submit").onclick = function () {
+  document.getElementById("submit").onclick = function () {
     server_nb_input = document.getElementById("server-input").value;
     console.log(server_nb_input);
     document.getElementById("server-nb").textContent = server_nb_input;
   };
 
   /* AUDIO */
-  const audio = document.getElementById("myAudio");
-  const playPauseBtn = document.querySelector(".play");
+  const audio = document.getElementById("my-audio");
+  const playPauseBtn = document.getElementById("play-btn");
   const audioStatus = document.getElementById("audio-status");
-  const replayBtn = document.querySelector(".replay");
+  const replayBtn = document.querySelector("replay-btn");
 
   playPauseBtn.addEventListener("click", () => {
     if (audio.paused) {
