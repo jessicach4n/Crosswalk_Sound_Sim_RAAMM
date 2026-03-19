@@ -28,11 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (audio.paused) {
       audio.play();
       playPauseBtn.textContent = "Pause"; // change button text
-      playPauseBtn.classList.remove("paused");
+      playPauseBtn.classList.remove("play");
+      playPauseBtn.classList.add("pause");
     } else {
       audio.pause();
       playPauseBtn.textContent = "Jouez"; // change button text
-      playPauseBtn.classList.add("paused");
+      playPauseBtn.classList.remove("pause");
+      playPauseBtn.classList.add("play");
     }
   });
 
