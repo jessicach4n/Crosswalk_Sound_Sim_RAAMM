@@ -1,142 +1,160 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles/style.css" />
 
-    <script src="js/index.js" defer></script>
-    <script src="js/client.js" defer></script>
-    <title>Simulateur RAAMM</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles/style.css" />
 
-  <body class="app-container">
-    <main class="screen">
-      
-      <section id="landing" class="landing-page">
-        <h1 id="landing-heading">SIMULATION DES FEUX SONORES</h1>
-        <p>Le but de ce projet est de simuler des passages pour piétons auditives pour les ateliers et les démonstrations de la RAAMM.</p>
-        <p></p>
-        <p></p>
-        <button id="start-btn">Commencer</button>
-      </section>
+  <script src="js/index.js" defer></script>
+  <script src="js/client.js" defer></script>
+  <title>Simulateur RAAMM</title>
+</head>
 
-      <!-- RENAME TO PROPER ID NAME -->
-      <section id="home" class="home-page hidden">
-        <div class="center-content">
-          <h1 id="home-heading">Se connecter à d'autres appareils</h1>
+<body class="app-container">
+  <main class="screen">
 
-          <p id="create-label">Créez votre serveur :</p>
-          <button id="create-server-btn">Créer un serveur</button>
-          <p aria-hidden="true">Ou</p>
-          <p id="server-num-label">Entrer le numéro du serveur :</p>
-          <input
-            type="text"
-            id="server-input"
-            placeholder="Entrez le numéro du serveur..."
-            aria-labelledby="server-num-label"
-            aria-required="true"
-          />
-          <button id="submit">Soumettre</button>
-        </div>
-      </section>
+    <section id="landing" class="landing-page">
+      <h1 id="landing-heading">SIMULATION DES FEUX SONORES</h1>
+      <p> Le but de ce projet est de simuler des passages pour piétons auditives pour les ateliers et les démonstrations
+        de la RAAMM.
+        <br><br>
+        Avant la simulation, il vous faut deux utilisateurs et deux appareils pour rejoindre le même serveur. Chaque
+        appareil émettra une mélodie de passage pour simuler une intersection.
+        <br><br>
+        Un utilisateur aura besoin the créer un serveur pour contrôler l’audio. L’appareil de l’autre utilisateur
+        simulera l’autre côté de la rue.
+      </p>
+      <p></p>
+      <p></p>
+      <button id="start-btn">Commencer</button>
+    </section>
 
-      
-      <section id="waiting-room" class="hidden">
-        <div class="center_content">
-          <!-- Live region for audible updates in French -->
-          <p aria-live="polite" id="room-status" class="sr-only" lang="fr">
-            Votre numéro de serveur est affiché ci-dessous.
-          </p>
+    <!-- RENAME TO PROPER ID NAME -->
+    <section id="home" class="home-page hidden">
+      <div class="center-content">
+        <h1 id="home-heading">Pour commencer, veuillez choisir l'une des deux options suivantes:</h1>
 
-          <!-- Label for the room code -->
-          <p id="room-label">Voici votre numéro de server:</p>
+        <button id="create-server-btn">Créer un serveur</button>
+        <button id="rejoindre-sever-btn">Rejoindre un serveur</button>
 
-          <!-- Dynamic room code with accessibility attributes -->
-          <p
-            id="room-code"
-            role="status"
-            aria-live="polite"
-            aria-labelledby="room-label"
-            lang="fr"
-          ></p>
+      </div>
+    </section>
 
-          <!-- Link styled as button for waiting -->
-           <button id="wait-room-btn">Wait</button>
 
-        </div>
-      </section>
+    <section id="waiting-room" class="">
+      <div class="center_content">
+        <!-- Live region for audible updates in French -->
+        <p aria-live="polite" id="room-status" class="sr-only" lang="fr">
+          Votre numero de serveur est:
+        </p>
 
-      <section id="controller" class="hidden">
-        <!-- ARIA live region to announce actions such as playing sounds -->
-        <div aria-live="polite" id="audio-status" class="sr-only"></div>
-        <div class="center-content">
+        <!-- Label for the room code -->
+        <p id="room-label">Votre numero de serveur est:</p>
+
+        <!-- Dynamic room code with accessibility attributes -->
+        <p id="room-code" role="status" aria-live="polite" aria-labelledby="room-label" lang="fr"></p>
+        <p>Veuillez patienter pendant qu’un autre appareil rejoint votre serveur.</p>
+        <!-- Link styled as button for waiting -->
+        <button id="wait-room-btn">Wait</button>
+
+      </div>
+    </section>
+
+    <section id="duration" class="">
+      <h1>Choisisez la durée du son et allez à l’étape suivante:</h1>
+      <button id="duration-15-sec-btn">15 secondes</button>
+      <button id="duration-30-sec-btn">30 secondes</button>
+      <button id="duration-45-sec-btn">45 secondes</button>
+      <button id="duration-60-sec-btn">60 secondes</button>
+      <button id="allez-au-simulateur">Aller au simulateur</button>
+    </section>
+
+    <section id="controller" class="">
+      <!-- ARIA live region to announce actions such as playing sounds -->
+      <div aria-live="polite" id="audio-status" class="sr-only"></div>
+      <div class="center-content">
+        <h1>Choisisez et jouez votre mélodie:</h1>
+
+        <!-- controller for Beep Beep -->
+        <div id="beep-beep">
+          <h2>Beep Beep</h2>
           <!-- Accessible button with ARIA label describing the action -->
-          <button
-            type="button"
-            aria-label="Jouer la mélodie du signal sonore de passage piéton"
-            id="play-btn"
-            class="play"
-          > 
+          <button type="button" aria-label="Jouer la mélodie beep beep" id="play-btn" class="play">
             Jouez
           </button>
 
           <!-- Accessible replay button -->
-          <button
-            type="button"
-            aria-label="Rejouer la mélodie du signal sonore de passage piéton"
-            id="replay-btn"
-            class="replay"
-          >
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="replay-btn"
+            class="replay">
             Rejouez
           </button>
-
-          <!-- Section heading for melody selection -->
-          <h1 id="melody-heading">Changez La Melodie</h1>
-
-          <!-- Grouping related controls improves screen reader navigation -->
-          <div role="group" aria-labelledby="melody-heading">
-            <!-- Canadian crosswalk melody -->
-            <button
-              type="button"
-              aria-label="Sélectionner la mélodie canadienne du passage piéton"
-              class="music"
-            >
-              La Melodie Canadienne
-            </button>
-
-            <!-- Beep beep melody -->
-            <button
-              type="button"
-              aria-label="Sélectionner la mélodie bip bip du passage piéton"
-              class="music"
-            >
-              La Melodie Beep Beep
-            </button>
-          </div>
         </div>
-      </section>
+        
+        <!-- controller for Melody du Canada -->
+        <div id="melody-du-canada">
+          <h2>Mélodie du Canada</h2>
+          <!-- Accessible button with ARIA label describing the action -->
+          <button type="button" aria-label="Jouer la mélodie beep beep" id="play-btn" class="play">
+            Jouez
+          </button>
 
-      <section id="listener" class="hidden">
-        <div class="center_content">
-          <!-- Live region for spoken updates in French -->
-          <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
-            En attente du début de la démonstration du passage piéton.
-          </p>
-
-          <h1 id="server-heading">Vous êtes dans serveur 123456</h1>
-
-          <p aria-labelledby="server-heading">
-            Veuillez attendre que le créateur du serveur commence la
-            démonstration
-          </p>
+          <!-- Accessible replay button -->
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="replay-btn"
+            class="replay">
+            Rejouez
+          </button>
         </div>
-      </section>
 
-    </main>
+        <!-- conntroller for cuckoo -->
+        <div id="cuckoo">
+          <h2>Beep Beep</h2>
+          <!-- Accessible button with ARIA label describing the action -->
+          <button type="button" aria-label="Jouer la mélodie beep beep" id="play-btn" class="play">
+            Jouez
+          </button>
 
-    <footer>
-      <img src="assets/logo.png" alt="logo">
-    </footer>
-  </body>
+          <!-- Accessible replay button -->
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="replay-btn"
+            class="replay">
+            Rejouez
+          </button>
+        </div>
+
+          
+        </div>
+      </div>
+    </section>
+
+
+    <section id="joining-room" class="">
+      <h1>Demandez au créateur du serveur pour le code numérique et entrez-le ci-dessous:</h1>
+      <input type="text" id="server-input" placeholder="Entrez le numéro du serveur..."
+        aria-labelledby="server-num-label" aria-required="true" />
+      <button id="submit">Soumettre</button>
+    </section>
+
+    <section id="listener" class="">
+      <div class="center_content">
+        <!-- Live region for spoken updates in French -->
+        <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
+          En attente du début de la démonstration du passage piéton.
+        </p>
+
+        <h1 id="server-heading">Vous êtes dans serveur 123456</h1>
+
+        <p aria-labelledby="server-heading">
+          Veuillez attendre que le créateur du serveur commence la
+          démonstration
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <img src="assets/logo.png" alt="logo">
+  </footer>
+</body>
+
 </html>
