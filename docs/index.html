@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link rel="stylesheet" href="styles/style.css" />
 
   <script src="js/index.js" defer></script>
@@ -31,7 +32,7 @@
     </section>
 
     <!-- RENAME TO PROPER ID NAME -->
-    <section id="home" class="home-page hidden">
+    <section id="home" class="home-page ">
       <div class="center-content">
         <h1 id="home-heading">Pour commencer, veuillez choisir l'une des deux options suivantes:</h1>
 
@@ -62,12 +63,16 @@
     </section>
 
     <section id="duration" class="">
-      <h1>Choisisez la durée du son et allez à l’étape suivante:</h1>
-      <button id="duration-15-sec-btn">15 secondes</button>
-      <button id="duration-30-sec-btn">30 secondes</button>
-      <button id="duration-45-sec-btn">45 secondes</button>
-      <button id="duration-60-sec-btn">60 secondes</button>
-      <button id="allez-au-simulateur">Aller au simulateur</button>
+      <h1>Choisisez la durée du son et allez à l'étape suivante:</h1>
+      <div class="center-content">
+        <button id="duration-15-sec-btn" class="unselected">15 secondes</button>
+        <button id="duration-30-sec-btn" class="unselected">30 secondes</button>
+        <button id="duration-45-sec-btn" class="unselected">45 secondes</button>
+        <button id="duration-60-sec-btn" class="unselected">60 secondes</button>
+        <button id="allez-au-simulateur">Aller au simulateur</button>
+      </div>
+
+
     </section>
 
     <section id="controller" class="">
@@ -77,57 +82,69 @@
         <h1>Choisisez et jouez votre mélodie:</h1>
 
         <!-- controller for Beep Beep -->
-        <div id="beep-beep">
+        <div id="beep-beep" class="subcontrollers">
           <h2>Beep Beep</h2>
           <!-- Accessible button with ARIA label describing the action -->
-          <button type="button" aria-label="Jouer la mélodie beep beep" id="play-btn" class="play">
-            Jouez
+          <button type="button" aria-label="Jouer la mélodie beep beep" id="beep-beep-play-btn" class="play">
+            <span class="material-symbols-outlined">
+              play_arrow
+            </span>
           </button>
 
           <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="replay-btn"
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="beep-beep-replay-btn"
             class="replay">
-            Rejouez
+            <span class="material-symbols-outlined">
+              replay
+            </span>
           </button>
         </div>
-        
+
         <!-- controller for Melody du Canada -->
-        <div id="melody-du-canada">
+        <div id="melody-du-canada" class="subcontrollers">
           <h2>Mélodie du Canada</h2>
           <!-- Accessible button with ARIA label describing the action -->
-          <button type="button" aria-label="Jouer la mélodie beep beep" id="play-btn" class="play">
-            Jouez
+          <button type="button" aria-label="Jouer la mélodie beep beep" id="melody-du-canada-play-btn" class="play">
+            <span class="material-symbols-outlined">
+              play_arrow
+            </span>
           </button>
 
           <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="replay-btn"
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="melody-du-canda-replay-btn"
             class="replay">
-            Rejouez
+            <span class="material-symbols-outlined">
+              replay
+            </span>
           </button>
         </div>
 
         <!-- conntroller for cuckoo -->
-        <div id="cuckoo">
-          <h2>Beep Beep</h2>
+        <div id="cuckoo" class="subcontrollers">
+          <h2>Cuckoo</h2>
           <!-- Accessible button with ARIA label describing the action -->
-          <button type="button" aria-label="Jouer la mélodie beep beep" id="play-btn" class="play">
-            Jouez
+          <button type="button" aria-label="Jouer la mélodie beep beep" id="cuckoo-play-btn" class="play">
+            <span class="material-symbols-outlined">
+              play_arrow
+            </span>
           </button>
 
           <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="replay-btn"
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="cuckoo-replay-btn"
             class="replay">
-            Rejouez
+            <span class="material-symbols-outlined">
+              replay
+            </span>
           </button>
         </div>
 
-          
-        </div>
+
+      </div>
       </div>
     </section>
 
 
-    <section id="joining-room" class="">
+    <section id="joining-room" class="center-content">
       <h1>Demandez au créateur du serveur pour le code numérique et entrez-le ci-dessous:</h1>
       <input type="text" id="server-input" placeholder="Entrez le numéro du serveur..."
         aria-labelledby="server-num-label" aria-required="true" />
@@ -138,10 +155,9 @@
       <div class="center_content">
         <!-- Live region for spoken updates in French -->
         <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
-          En attente du début de la démonstration du passage piéton.
         </p>
 
-        <h1 id="server-heading">Vous êtes dans serveur 123456</h1>
+        <h1 id="server-heading">Vous êtes dans serveur <br>123456</h1>
 
         <p aria-labelledby="server-heading">
           Veuillez attendre que le créateur du serveur commence la
