@@ -1,11 +1,4 @@
-// 1. WEBSOCKET SETUP: Connect to the server
-const socket = new WebSocket("ws://localhost:8080");
-
-socket.addEventListener("open", () => {
-  console.log("Connected to the server!");
-});
-
-// 2. DOM elements 
+//==========DOM elements============
 //buttons
 const startButton = document.getElementById("start-btn");
 const createServerButton = document.getElementById("create-server-btn");
@@ -51,7 +44,7 @@ const joiningRoomHeading = document.getElementById("joining-room-heading");
 const listenerPage = document.getElementById("listener");
 const listenerHeading = document.getElementById("listener-heading");
 
-// 3. Page navigation functions
+//==========Page navigation functions==========
 let currentPage = landingPage;
 
 function navigateTo(targetPage, targetHeading) {
@@ -67,7 +60,7 @@ function navigateTo(targetPage, targetHeading) {
   targetHeading.focus();
 }
 
-// 4. Event listeners
+// ==============Event listeners===============
 // landing to home page
 startButton.addEventListener("click", () => {
   navigateTo(homePage, homeHeading);

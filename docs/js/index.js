@@ -1,10 +1,33 @@
+const socket = new WebSocket("ws://localhost:8080");
 
-/*SIMULATE SERVER CODE TO DELETE */
+socket.addEventListener("open", () => {
+  console.log("Frontend: Connected to the server!");
+});
+
+
+//=============DOM elements=================
 const roomCodeContainer = document.getElementById("room-code");
 const waitRoomBtn = document.getElementById("wait-room-btn");
 
-const roomCode = String(Math.floor(Math.random() * 100000)).padStart(5, "0");
-roomCodeContainer.textContent = roomCode;
+
+document.getElementById("create-server-btn").addEventListener("click", () => {
+  socket.send(JSON.stringify({ type: "create" }));
+});
+
+socket.addEventListener("message", (event) => {
+  const message = JSON.parse(event.data);
+
+  if (message.type === "error") {
+    console.log(message);
+  }
+
+  if (message.type === "room-created") {
+    roomCodeContainer.textContent = message.roomCode;
+    console.log(message.roomCode)
+  }
+});
+
+/*SIMULATE SERVER CODE TO DELETE */
 
 setTimeout(() => {
   waitRoomBtn.textContent = "Suivant";
@@ -37,5 +60,3 @@ buttons.forEach(button => {
     button.classList.add("selected");
   });
 });
-
-
