@@ -2,7 +2,7 @@
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
     /* outline: 1px solid red; */
-  
+
 }
 
 .app-container {
@@ -21,7 +21,7 @@
 section {
     text-align: center;
     max-width: 98%;
-    margin: 0 auto;
+    margin: 20% auto;
 }
 
 /* Uncomment when pages are done */
@@ -54,7 +54,7 @@ p {
 }
 
 input {
-     width: 90%;
+    width: 90%;
     font-size: 14px;
     color: #000;
     font-weight: 400;
@@ -115,9 +115,10 @@ button.unselected {
     gap: 10px;
 }
 
-.subcontrollers h2{
+.subcontrollers h2 {
     width: 40%;
 }
+
 .subcontrollers button {
     display: flex;
     width: 60px;
@@ -128,22 +129,20 @@ button.unselected {
     align-items: center;
     aspect-ratio: 64/65;
     margin: auto;
+    border-radius: 80px;
+    border: 3px solid #FFF;
 }
 
 .play {
-    border-radius: 80px;
-    border: 3px solid #FFF;
     background: #1E7C02;
 }
 
 .pause {
-    border: 4px solid #867A00;
+
     background: #DC970D;
 }
 
 .replay {
-    border-radius: 80px;
-    border: 3px solid #FFF;
     background: #A7397F;
 }
 
@@ -151,3 +150,11 @@ button.unselected {
     border: 4px solid #860060;
     background: #BB0086;
 }
+
+
+/* .material-symbols-outlined {
+     font-size: 90px;
+    background-color: #004773;
+      position: relative;
+  left: 1px;
+} */

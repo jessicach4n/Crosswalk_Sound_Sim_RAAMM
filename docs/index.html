@@ -24,15 +24,17 @@
         appareil émettra une mélodie de passage pour simuler une intersection.
         <br><br>
         Un utilisateur aura besoin the créer un serveur pour contrôler l’audio. L’appareil de l’autre utilisateur
-        simulera l’autre côté de la rue.
+        simulera l'autre côté de la rue.
       </p>
-      <p></p>
-      <p></p>
+
       <button id="start-btn">Commencer</button>
     </section>
 
     <!-- RENAME TO PROPER ID NAME -->
-    <section id="home" class="home-page ">
+    <section id="home" class="home-page hidden">
+      <span class="material-symbols-outlined">
+arrow_back
+</span>
       <div class="center-content">
         <h1 id="home-heading">Pour commencer, veuillez choisir l'une des deux options suivantes:</h1>
 
@@ -43,13 +45,13 @@
     </section>
 
 
-    <section id="waiting-room" class="">
+    <section id="waiting-room" class="hidden">
       <div class="center_content">
         <!-- Live region for audible updates in French -->
-        <p aria-live="polite" id="room-status" class="sr-only" lang="fr">
+        <!-- <p aria-live="polite" id="room-status" class="sr-only" lang="fr">
           Votre numero de serveur est:
-        </p>
-
+        </p> -->
+        <h1 id="waiting-room-heading"> Votre numero de serveur est: </h1>
         <!-- Label for the room code -->
         <p id="room-label">Votre numero de serveur est:</p>
 
@@ -62,24 +64,24 @@
       </div>
     </section>
 
-    <section id="duration" class="">
-      <h1>Choisisez la durée du son et allez à l'étape suivante:</h1>
+    <section id="duration" class="hidden">
+      <h1 id="duration-heading">Choisisez la durée du son et allez à l'étape suivante:</h1>
       <div class="center-content">
         <button id="duration-15-sec-btn" class="unselected">15 secondes</button>
         <button id="duration-30-sec-btn" class="unselected">30 secondes</button>
         <button id="duration-45-sec-btn" class="unselected">45 secondes</button>
         <button id="duration-60-sec-btn" class="unselected">60 secondes</button>
-        <button id="allez-au-simulateur">Aller au simulateur</button>
+        <button id="allez-au-simulateur-btn">Aller au simulateur</button>
       </div>
 
 
     </section>
 
-    <section id="controller" class="">
+    <section id="controller" class="hidden">
       <!-- ARIA live region to announce actions such as playing sounds -->
       <div aria-live="polite" id="audio-status" class="sr-only"></div>
       <div class="center-content">
-        <h1>Choisisez et jouez votre mélodie:</h1>
+        <h1 id="controller-heading">Choisisez et jouez votre mélodie:</h1>
 
         <!-- controller for Beep Beep -->
         <div id="beep-beep" class="subcontrollers">
@@ -92,8 +94,8 @@
           </button>
 
           <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="beep-beep-replay-btn"
-            class="replay">
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton"
+            id="beep-beep-replay-btn" class="replay">
             <span class="material-symbols-outlined">
               replay
             </span>
@@ -101,7 +103,7 @@
         </div>
 
         <!-- controller for Melody du Canada -->
-        <div id="melody-du-canada" class="subcontrollers">
+        <div id="melody-du-canada" class="subcontrollers hidden">
           <h2>Mélodie du Canada</h2>
           <!-- Accessible button with ARIA label describing the action -->
           <button type="button" aria-label="Jouer la mélodie beep beep" id="melody-du-canada-play-btn" class="play">
@@ -111,8 +113,8 @@
           </button>
 
           <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="melody-du-canda-replay-btn"
-            class="replay">
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton"
+            id="melody-du-canada-replay-btn" class="replay">
             <span class="material-symbols-outlined">
               replay
             </span>
@@ -120,7 +122,7 @@
         </div>
 
         <!-- conntroller for cuckoo -->
-        <div id="cuckoo" class="subcontrollers">
+        <div id="cuckoo" class="subcontrollers hidden">
           <h2>Cuckoo</h2>
           <!-- Accessible button with ARIA label describing the action -->
           <button type="button" aria-label="Jouer la mélodie beep beep" id="cuckoo-play-btn" class="play">
@@ -130,8 +132,8 @@
           </button>
 
           <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton" id="cuckoo-replay-btn"
-            class="replay">
+          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton"
+            id="cuckoo-replay-btn" class="replay">
             <span class="material-symbols-outlined">
               replay
             </span>
@@ -144,20 +146,24 @@
     </section>
 
 
-    <section id="joining-room" class="center-content">
-      <h1>Demandez au créateur du serveur pour le code numérique et entrez-le ci-dessous:</h1>
-      <input type="text" id="server-input" placeholder="Entrez le numéro du serveur..."
-        aria-labelledby="server-num-label" aria-required="true" />
-      <button id="submit">Soumettre</button>
+    <section id="joining-room" class="hidden ">
+      <div class="center-content">
+        <h1 id="joining-room-heading">Demandez au créateur du serveur pour le code numérique et entrez-le ci-dessous:
+        </h1>
+        <input type="text" id="server-input" placeholder="Entrez le numéro du serveur..."
+          aria-labelledby="server-num-label" aria-required="true" />
+        <button id="submit-btn">Soumettre</button>
+      </div>
+
     </section>
 
-    <section id="listener" class="">
+    <section id="listener" class="hidden">
       <div class="center_content">
         <!-- Live region for spoken updates in French -->
         <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
         </p>
 
-        <h1 id="server-heading">Vous êtes dans serveur <br>123456</h1>
+        <h1 id="listener-heading">Vous êtes dans serveur <br>123456</h1>
 
         <p aria-labelledby="server-heading">
           Veuillez attendre que le créateur du serveur commence la
