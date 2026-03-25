@@ -18,6 +18,26 @@ document.getElementById("submit-btn").onclick = function () {
   document.getElementById("server-nb").textContent = server_nb_input;
 };
 
+//======= duration buttons=====
+
+const buttons = document.querySelectorAll("#duration button:not(#allez-au-simulateur-btn)");
+
+//loop through all buttons in class duration-button
+buttons.forEach(button => {
+  button.addEventListener("click", () => {
+
+    //unselectes all buttons
+    buttons.forEach(btn => {
+      btn.classList.remove("selected");
+      btn.classList.add("unselected");
+    });
+    
+    //selected button that was clicked
+    button.classList.remove("unselected");
+    button.classList.add("selected");
+  });
+});
+
 /* AUDIO */
 
 // Melody du canada

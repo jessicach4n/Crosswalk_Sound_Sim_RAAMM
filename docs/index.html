@@ -32,9 +32,7 @@
 
     <!-- RENAME TO PROPER ID NAME -->
     <section id="home" class="home-page hidden">
-      <span class="material-symbols-outlined">
-arrow_back
-</span>
+      <span id="back-to-landing" class="material-symbols-outlined back-arrow">arrow_back</span>
       <div class="center-content">
         <h1 id="home-heading">Pour commencer, veuillez choisir l'une des deux options suivantes:</h1>
 
@@ -46,6 +44,8 @@ arrow_back
 
 
     <section id="waiting-room" class="hidden">
+      <span id="back-to-home" class="material-symbols-outlined back-arrow">arrow_back</span>
+
       <div class="center_content">
         <!-- Live region for audible updates in French -->
         <!-- <p aria-live="polite" id="room-status" class="sr-only" lang="fr">
@@ -65,8 +65,10 @@ arrow_back
     </section>
 
     <section id="duration" class="hidden">
+      <span id="back-to-waiting-room" class="material-symbols-outlined back-arrow">arrow_back</span>
+
       <h1 id="duration-heading">Choisisez la durée du son et allez à l'étape suivante:</h1>
-      <div class="center-content">
+      <div class="center-content ">
         <button id="duration-15-sec-btn" class="unselected">15 secondes</button>
         <button id="duration-30-sec-btn" class="unselected">30 secondes</button>
         <button id="duration-45-sec-btn" class="unselected">45 secondes</button>
@@ -78,6 +80,8 @@ arrow_back
     </section>
 
     <section id="controller" class="hidden">
+      <span id="back-to-duration" class="material-symbols-outlined back-arrow">arrow_back</span>
+
       <!-- ARIA live region to announce actions such as playing sounds -->
       <div aria-live="polite" id="audio-status" class="sr-only"></div>
       <div class="center-content">
@@ -147,6 +151,7 @@ arrow_back
 
 
     <section id="joining-room" class="hidden ">
+      <span id="back-to-home-from-joining-room" class="material-symbols-outlined back-arrow">arrow_back</span>
       <div class="center-content">
         <h1 id="joining-room-heading">Demandez au créateur du serveur pour le code numérique et entrez-le ci-dessous:
         </h1>
@@ -158,6 +163,7 @@ arrow_back
     </section>
 
     <section id="listener" class="hidden">
+      <span id="back-to-joining-room" class="material-symbols-outlined back-arrow">arrow_back</span>
       <div class="center_content">
         <!-- Live region for spoken updates in French -->
         <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
