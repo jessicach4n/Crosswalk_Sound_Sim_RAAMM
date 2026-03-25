@@ -40,7 +40,7 @@ buttons.forEach(button => {
 
 /* AUDIO */
 
-// Melody du canada
+// Melodie du Canada
 const audio = new Audio("audio/canadian_melody.wav")
 const playPauseBtn = document.getElementById("melody-du-canada-play-btn");
 const audioStatus = document.getElementById("audio-status");
@@ -54,7 +54,7 @@ playPauseBtn.addEventListener("click", () => {
     playPauseBtn.classList.add("pause");
   } else {
     audio.pause();
-    playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // chnage to play icon
+    playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
     playPauseBtn.classList.remove("pause");
     playPauseBtn.classList.add("play");
   }
@@ -62,7 +62,7 @@ playPauseBtn.addEventListener("click", () => {
 
 // Optional: when audio ends, reset button text
 audio.addEventListener("ended", () => {
-  playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // chnage to play icon
+  playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
 });
 
 // Replay on click

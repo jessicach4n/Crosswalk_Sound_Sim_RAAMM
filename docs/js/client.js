@@ -30,6 +30,7 @@ const landingHeading = document.getElementById("landing-heading");
 const homePage = document.getElementById("home");
 const homeHeading = document.getElementById("home-heading");
 
+
 //waiting room
 const waitingRoomPage = document.getElementById("waiting-room");
 const waitingRoomHeading = document.getElementById("waiting-room-heading");
