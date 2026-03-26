@@ -15,165 +15,239 @@
 <body class="app-container">
   <main class="screen">
 
-    <section id="landing" class="landing-page">
+    <section id="landing" class="landing-page" aria-labelledby="landing-heading">
       <h1 id="landing-heading">SIMULATION DES FEUX SONORES</h1>
-      <p> Le but de ce projet est de simuler des passages pour piétons auditives pour les ateliers et les démonstrations
-        de la RAAMM.
-        <br><br>
-        Avant la simulation, il vous faut deux utilisateurs et deux appareils pour rejoindre le même serveur. Chaque
-        appareil émettra une mélodie de passage pour simuler une intersection.
-        <br><br>
-        Un utilisateur aura besoin the créer un serveur pour contrôler l’audio. L’appareil de l’autre utilisateur
-        simulera l'autre côté de la rue.
+      <p>
+        Le but de ce projet est de simuler des passages pour piétons auditives
+        pour les ateliers et les démonstrations de la RAAMM.
+        <br /><br />
+        Avant la simulation, il vous faut deux utilisateurs et deux appareils
+        pour rejoindre le même serveur. Chaque appareil émettra une mélodie de
+        passage pour simuler une intersection.
+        <br /><br />
+        Un utilisateur aura besoin the créer un serveur pour contrôler l'audio.
+        L'appareil de l'autre utilisateur simulera l'autre côté de la rue.
       </p>
 
-      <button id="start-btn">Commencer</button>
+      <button type="button" id="start-btn">Commencer</button>
     </section>
 
-    <!-- RENAME TO PROPER ID NAME -->
-    <section id="home" class="home-page hidden">
-      <span id="back-to-landing" class="material-symbols-outlined back-arrow">arrow_back</span>
+    <section
+      id="home"
+      class="home-page hidden"
+      aria-labelledby="home-heading"
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        id="back-to-landing"
+        class="back-arrow"
+        aria-label="Retour à la page d'accueil"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      </button>
       <div class="center-content">
-        <h1 id="home-heading">Pour commencer, veuillez choisir l'une des deux options suivantes:</h1>
+        <h1 id="home-heading">
+          Pour commencer, veuillez choisir l'une des deux options suivantes:
+        </h1>
 
-        <button id="create-server-btn">Créer un serveur</button>
-        <button id="rejoindre-sever-btn">Rejoindre un serveur</button>
-
+        <button type="button" id="create-server-btn">Créer un serveur</button>
+        <button type="button" id="rejoindre-sever-btn">Rejoindre un serveur</button>
       </div>
     </section>
 
-
-    <section id="waiting-room" class="hidden">
-      <span id="back-to-home" class="material-symbols-outlined back-arrow">arrow_back</span>
+    <section
+      id="waiting-room"
+      class="hidden"
+      aria-labelledby="waiting-room-heading"
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        id="back-to-home"
+        class="back-arrow"
+        aria-label="Retour au menu principal"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      </button>
 
       <div class="center_content">
-        <!-- Live region for audible updates in French -->
-        <!-- <p aria-live="polite" id="room-status" class="sr-only" lang="fr">
-          Votre numero de serveur est:
-        </p> -->
-        <h1 id="waiting-room-heading"> Votre numero de serveur est: </h1>
-        <!-- Label for the room code -->
+        <h1 id="waiting-room-heading">Votre numero de serveur est:</h1>
         <p id="room-label">Votre numero de serveur est:</p>
-
-        <!-- Dynamic room code with accessibility attributes -->
-        <p id="room-code" role="status" aria-live="polite" aria-labelledby="room-label" lang="fr"></p>
-        <p>Veuillez patienter pendant qu’un autre appareil rejoint votre serveur.</p>
-        <!-- Link styled as button for waiting -->
-        <button id="wait-room-btn">Wait</button>
-
+        <p
+          id="room-code"
+          role="status"
+          aria-live="polite"
+          aria-labelledby="room-label"
+          lang="fr"
+        ></p>
+        <p>
+          Veuillez patienter pendant qu'un autre appareil rejoint votre serveur.
+        </p>
+        <button type="button" id="wait-room-btn">Wait</button>
       </div>
     </section>
 
-    <section id="duration" class="hidden">
-      <span id="back-to-waiting-room" class="material-symbols-outlined back-arrow">arrow_back</span>
+    <section
+      id="duration"
+      class="hidden"
+      aria-labelledby="duration-heading"
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        id="back-to-waiting-room"
+        class="back-arrow"
+        aria-label="Retour à la salle d'attente"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      </button>
 
-      <h1 id="duration-heading">Choisisez la durée du son et allez à l'étape suivante:</h1>
-      <div class="center-content ">
-        <button id="duration-15-sec-btn" class="unselected">15 secondes</button>
-        <button id="duration-30-sec-btn" class="unselected">30 secondes</button>
-        <button id="duration-45-sec-btn" class="unselected">45 secondes</button>
-        <button id="duration-60-sec-btn" class="unselected">60 secondes</button>
-        <button id="allez-au-simulateur-btn">Aller au simulateur</button>
+      <h1 id="duration-heading">
+        Choisisez la durée du son et allez à l'étape suivante:
+      </h1>
+      <div class="center-content">
+        <button type="button" id="duration-15-sec-btn" class="unselected">15 secondes</button>
+        <button type="button" id="duration-30-sec-btn" class="unselected">30 secondes</button>
+        <button type="button" id="duration-45-sec-btn" class="unselected">45 secondes</button>
+        <button type="button" id="duration-60-sec-btn" class="unselected">60 secondes</button>
+        <button type="button" id="allez-au-simulateur-btn">Aller au simulateur</button>
       </div>
-
-
     </section>
 
-    <section id="controller" class="hidden">
-      <span id="back-to-duration" class="material-symbols-outlined back-arrow">arrow_back</span>
+    <section
+      id="controller"
+      class="hidden"
+      aria-labelledby="controller-heading"
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        id="back-to-duration"
+        class="back-arrow"
+        aria-label="Retour au choix de durée"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      </button>
 
-      <!-- ARIA live region to announce actions such as playing sounds -->
       <div aria-live="polite" id="audio-status" class="sr-only"></div>
       <div class="center-content">
         <h1 id="controller-heading">Choisisez et jouez votre mélodie:</h1>
 
-        <!-- controller for Beep Beep -->
         <div id="beep-beep" class="subcontrollers">
           <h2>Beep Beep</h2>
-          <!-- Accessible button with ARIA label describing the action -->
-          <button type="button" aria-label="Jouer la mélodie beep beep" id="beep-beep-play-btn" class="play">
-            <span class="material-symbols-outlined">
-              play_arrow
-            </span>
+          <button
+            type="button"
+            aria-label="Jouer la mélodie Beep Beep"
+            id="beep-beep-play-btn"
+            class="play"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
           </button>
-
-          <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton"
-            id="beep-beep-replay-btn" class="replay">
-            <span class="material-symbols-outlined">
-              replay
-            </span>
+          <button
+            type="button"
+            aria-label="Rejouer la mélodie Beep Beep"
+            id="beep-beep-replay-btn"
+            class="replay"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">replay</span>
           </button>
         </div>
 
-        <!-- controller for Melody du Canada -->
-        <div id="melody-du-canada" class="subcontrollers hidden">
+        <div id="melody-du-canada" class="subcontrollers hidden" aria-hidden="true">
           <h2>Mélodie du Canada</h2>
-          <!-- Accessible button with ARIA label describing the action -->
-          <button type="button" aria-label="Jouer la mélodie beep beep" id="melody-du-canada-play-btn" class="play">
-            <span class="material-symbols-outlined">
-              play_arrow
-            </span>
+          <button
+            type="button"
+            aria-label="Jouer la mélodie du Canada"
+            id="melody-du-canada-play-btn"
+            class="play"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
           </button>
-
-          <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton"
-            id="melody-du-canada-replay-btn" class="replay">
-            <span class="material-symbols-outlined">
-              replay
-            </span>
+          <button
+            type="button"
+            aria-label="Rejouer la mélodie du Canada"
+            id="melody-du-canada-replay-btn"
+            class="replay"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">replay</span>
           </button>
         </div>
 
-        <!-- conntroller for cuckoo -->
-        <div id="cuckoo" class="subcontrollers hidden">
+        <div id="cuckoo" class="subcontrollers hidden" aria-hidden="true">
           <h2>Cuckoo</h2>
-          <!-- Accessible button with ARIA label describing the action -->
-          <button type="button" aria-label="Jouer la mélodie beep beep" id="cuckoo-play-btn" class="play">
-            <span class="material-symbols-outlined">
-              play_arrow
-            </span>
+          <button
+            type="button"
+            aria-label="Jouer la mélodie Cuckoo"
+            id="cuckoo-play-btn"
+            class="play"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
           </button>
-
-          <!-- Accessible replay button -->
-          <button type="button" aria-label="Rejouer la mélodie du signal sonore de passage piéton"
-            id="cuckoo-replay-btn" class="replay">
-            <span class="material-symbols-outlined">
-              replay
-            </span>
+          <button
+            type="button"
+            aria-label="Rejouer la mélodie Cuckoo"
+            id="cuckoo-replay-btn"
+            class="replay"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">replay</span>
           </button>
         </div>
-
-
-      </div>
       </div>
     </section>
 
-
-    <section id="joining-room" class="hidden ">
-      <span id="back-to-home-from-joining-room" class="material-symbols-outlined back-arrow">arrow_back</span>
+    <section
+      id="joining-room"
+      class="hidden"
+      aria-labelledby="joining-room-heading"
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        id="back-to-home-from-joining-room"
+        class="back-arrow"
+        aria-label="Retour au menu principal"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      </button>
       <div class="center-content">
-        <h1 id="joining-room-heading">Demandez au créateur du serveur pour le code numérique et entrez-le ci-dessous:
+        <h1 id="joining-room-heading">
+          Demandez au créateur du serveur pour le code numérique et
+          entrez-le ci-dessous:
         </h1>
-        <input type="text" id="server-input" placeholder="Entrez le numéro du serveur..."
-          aria-labelledby="server-num-label" aria-required="true" />
-        <button id="submit-btn">Soumettre</button>
+        <label for="server-input" id="server-num-label" class="sr-only">
+          Numéro du serveur
+        </label>
+        <input
+          type="text"
+          id="server-input"
+          placeholder="Entrez le numéro du serveur..."
+          aria-labelledby="server-num-label"
+          aria-required="true"
+        />
+        <button type="button" id="submit-btn">Soumettre</button>
       </div>
-
     </section>
 
-    <section id="listener" class="hidden">
-      <span id="back-to-joining-room" class="material-symbols-outlined back-arrow">arrow_back</span>
+    <section
+      id="listener"
+      class="hidden"
+      aria-labelledby="listener-heading"
+      aria-hidden="true"
+    >
+      <button
+        type="button"
+        id="back-to-joining-room"
+        class="back-arrow"
+        aria-label="Retour à la page de connexion au serveur"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      </button>
       <div class="center_content">
-        <!-- Live region for spoken updates in French -->
-        <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
-        </p>
-
-        <h1 id="listener-heading">Vous êtes dans serveur <br>123456</h1>
-
-        <p aria-labelledby="server-heading">
-          Veuillez attendre que le créateur du serveur commence la
-          démonstration
+        <p aria-live="polite" id="status-server" class="sr-only" lang="fr"></p>
+        <h1 id="listener-heading">Vous êtes dans serveur <br />123456</h1>
+        <p>
+          Veuillez attendre que le créateur du serveur commence la démonstration
         </p>
       </div>
     </section>
@@ -181,7 +255,7 @@
   </main>
 
   <footer>
-    <img src="assets/logo.png" alt="logo">
+    <img src="assets/logo.png" alt="Logo de la RAAMM" />
   </footer>
 </body>
 
