@@ -54,9 +54,13 @@ const listenerHeading = document.getElementById("listener-heading");
 let currentPage = landingPage;
 
 function navigateTo(targetPage, targetHeading) {
-  // Hide landing page and show home page
+  // Hide current page from screen readers
   currentPage.classList.add("hidden");
+  currentPage.setAttribute("aria-hidden", "true");
+
+  // Show target page to screen readers
   targetPage.classList.remove("hidden");
+  targetPage.setAttribute("aria-hidden", "false");
 
   // Set new current page
   currentPage = targetPage;
