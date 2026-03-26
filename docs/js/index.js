@@ -32,7 +32,7 @@ buttons.forEach(button => {
       btn.classList.remove("selected");
       btn.classList.add("unselected");
     });
-    
+
     //selected button that was clicked
     button.classList.remove("unselected");
     button.classList.add("selected");
@@ -46,18 +46,27 @@ const audio = new Audio("audio/canadian_melody.wav")
 const playPauseBtn = document.getElementById("melody-du-canada-play-btn");
 const audioStatus = document.getElementById("audio-status");
 const replayBtn = document.getElementById("melody-du-canada-replay-btn");
+const icon = playPauseBtn.querySelector(".material-symbols-outlined");
 
 playPauseBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
-    playPauseBtn.innerHTML = ` <span class="material-symbols-outlined" aria-hidden="true">pause</span>`; //change to pause icon
+    // playPauseBtn.innerHTML = ` <span class="material-symbols-outlined" aria-hidden="true">pause</span>`; //change to pause icon
+    icon.textContent = "pause";
     playPauseBtn.classList.remove("play");
     playPauseBtn.classList.add("pause");
+
+    playPauseBtn.setAttribute("aria-label", "Mettre en pause la mélodie du Canada");
+
   } else {
     audio.pause();
-    playPauseBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>`; // chnage to play icon
+    icon.textContent = "play_arrow";
+
+    // playPauseBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>`; // chnage to play icon
     playPauseBtn.classList.remove("pause");
     playPauseBtn.classList.add("play");
+    playPauseBtn.setAttribute("aria-label", "Jouer la mélodie du Canada");
+
   }
 });
 
