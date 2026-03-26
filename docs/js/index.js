@@ -7,7 +7,7 @@ const roomCode = String(Math.floor(Math.random() * 100000)).padStart(5, "0");
 roomCodeContainer.textContent = roomCode;
 
 setTimeout(() => {
-  waitRoomBtn.textContent = "Suivant";
+  waitRoomBtn.textContent = "Choisir une durée";
 }, 2000);
 
 //display server nb according to user input
