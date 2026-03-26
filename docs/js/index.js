@@ -50,12 +50,12 @@ const replayBtn = document.getElementById("melody-du-canada-replay-btn");
 playPauseBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
-    playPauseBtn.innerHTML = ` <span class="material-symbols-outlined">pause</span>`; //change to pause icon
+    playPauseBtn.innerHTML = ` <span class="material-symbols-outlined" aria-hidden="true">pause</span>`; //change to pause icon
     playPauseBtn.classList.remove("play");
     playPauseBtn.classList.add("pause");
   } else {
     audio.pause();
-    playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // chnage to play icon
+    playPauseBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>`; // chnage to play icon
     playPauseBtn.classList.remove("pause");
     playPauseBtn.classList.add("play");
   }
@@ -63,7 +63,7 @@ playPauseBtn.addEventListener("click", () => {
 
 // Optional: when audio ends, reset button text
 audio.addEventListener("ended", () => {
-  playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // chnage to play icon
+  playPauseBtn.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>`; // chnage to play icon
 });
 
 // Replay on click
