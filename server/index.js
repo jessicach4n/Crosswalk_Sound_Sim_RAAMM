@@ -42,6 +42,7 @@ wss.on("connection", (socket) => {
       rooms.set(roomCode, {
         host: socket,
         members: [socket],
+        duration: null,
       });
 
       socket.roomCode = roomCode;
@@ -66,15 +67,94 @@ wss.on("connection", (socket) => {
         return;
       }
 
+      if (room.members.length >= 2) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Room is full",
+          }),
+        );
+        return;
+      }
+
       room.members.push(socket);
       socket.roomCode = message.roomCode;
 
+      // success sent to listener
       socket.send(
         JSON.stringify({
           type: "room-joined",
           roomCode: message.roomCode,
         }),
       );
+
+      // notify the host someone joined
+      if (room.host && room.host.readyState === WebSocket.OPEN) {
+        console.log("peer-joined")
+        room.host.send(
+          JSON.stringify({
+            type: "peer-joined",
+            roomCode: message.roomCode,
+          }),
+        );
+      }
+    }
+    else if (message.type === "set-duration") {
+      const room = room.get(message.roomCode);
+      if (!room) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Room not found",
+          }),
+        );
+        return;
+      }
+
+      if (room.host !== socket) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Only the host can set the duration",
+          }),
+        );
+        return;
+      }
+
+      const validDurations = [15, 30, 45, 60];
+      const duration = Number(message.duration);
+
+      if (!validDurations.includes(duration)) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Invalid duration",
+          }),
+        );
+        return;
+      }
+
+      room.duration = duration;
+
+      // confirm to host
+      socket.send(
+        JSON.stringify({
+          type: "duration-set",
+          duration,
+        }),
+      );
+
+      // notify listener
+      room.members.forEach((member) => {
+        if (member !== socket && member.readyState === WebSocket.OPEN) {
+          member.send(
+            JSON.stringify({
+              type: "duration-updated",
+              duration,
+            }),
+          );
+        }
+      });
     }
     else {
         socket.send(JSON.stringify({ type: 'error', message: 'Invalid action' }));

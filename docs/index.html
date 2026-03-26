@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link rel="stylesheet" href="styles/style.css" />
 
+  <script src="js/shared.js" defer></script>
   <script src="js/index.js" defer></script>
   <script src="js/client.js" defer></script>
   <title>Simulateur RAAMM</title>
@@ -57,7 +58,7 @@
         <p id="room-code" role="status" aria-live="polite" aria-labelledby="room-label" lang="fr"></p>
         <p>Veuillez patienter pendant qu'un autre appareil rejoint votre serveur.</p>
         <!-- Link styled as button for waiting -->
-        <button id="wait-room-btn">Wait</button>
+        <button id="wait-room-btn" class="hidden">Choisir une durée</button>
 
       </div>
     </section>
@@ -67,10 +68,10 @@
 
       <h1 id="duration-heading">Choisisez la durée du son et allez à l'étape suivante:</h1>
       <div class="center-content ">
-        <button id="duration-15-sec-btn" class="unselected">15 secondes</button>
-        <button id="duration-30-sec-btn" class="unselected">30 secondes</button>
-        <button id="duration-45-sec-btn" class="unselected">45 secondes</button>
-        <button id="duration-60-sec-btn" class="unselected">60 secondes</button>
+        <button id="duration-15-sec-btn" class="unselected" data-duration="15">15 secondes</button>
+        <button id="duration-30-sec-btn" class="unselected" data-duration="30">30 secondes</button>
+        <button id="duration-45-sec-btn" class="unselected" data-duration="45">45 secondes</button>
+        <button id="duration-60-sec-btn" class="unselected" data-duration="60">60 secondes</button>
         <button id="allez-au-simulateur-btn">Aller au simulateur</button>
       </div>
     </section>
@@ -161,7 +162,7 @@
         <p aria-live="polite" id="status-server" class="sr-only" lang="fr">
         </p>
 
-        <h1 id="listener-heading">Vous êtes dans serveur <br>123456</h1>
+        <h1 id="listener-heading"></h1>
 
         <p aria-labelledby="server-heading">
           Veuillez attendre que le créateur du serveur commence la

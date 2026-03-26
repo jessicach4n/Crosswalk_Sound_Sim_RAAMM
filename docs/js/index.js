@@ -1,47 +1,172 @@
-const socket = new WebSocket("ws://localhost:8080");
+//==========DOM elements============
+//buttons
+const startButton = document.getElementById("start-btn");
+const createServerButton = document.getElementById("create-server-btn");
+const rejoindreServerButton = document.getElementById("rejoindre-sever-btn");
+const waitRoomButton = document.getElementById("wait-room-btn");
+const allezAuSimulateurButton = document.getElementById("allez-au-simulateur-btn");
+const sudmitButton = document.getElementById("submit-btn");
 
-socket.addEventListener("open", () => {
-  console.log("Frontend: Connected to the server!");
+//back buttons
+const backToLanding = document.getElementById("back-to-landing");
+const backToHome = document.getElementById("back-to-home");
+const backToWaitingRoom = document.getElementById("back-to-waiting-room");
+const backToDuration = document.getElementById("back-to-duration");
+const backToHomeFromJoiningRoom = document.getElementById("back-to-home-from-joining-room");
+const backToJoiningRoom = document.getElementById("back-to-joining-room");
+
+//landing page
+const landingPage = document.getElementById("landing");
+const landingHeading = document.getElementById("landing-heading");
+
+//home page
+const homePage = document.getElementById("home");
+const homeHeading = document.getElementById("home-heading");
+
+
+//waiting room
+const waitingRoomPage = document.getElementById("waiting-room");
+const waitingRoomHeading = document.getElementById("waiting-room-heading");
+
+//duration
+const durationPage = document.getElementById("duration");
+const durationHeading = document.getElementById("duration-heading");
+
+//controller
+const controllerPage = document.getElementById("controller");
+const controllerHeading = document.getElementById("controller-heading");
+
+//joining room
+const joiningRoomPage = document.getElementById("joining-room");
+const joiningRoomHeading = document.getElementById("joining-room-heading");
+
+//listener
+const listenerPage = document.getElementById("listener");
+const listenerHeading = document.getElementById("listener-heading");
+
+//==========Page navigation functions==========
+let currentPage = landingPage;
+
+function navigateTo(targetPage, targetHeading) {
+  // Hide landing page and show home page
+  currentPage.classList.add("hidden");
+  targetPage.classList.remove("hidden");
+
+  // Set new current page
+  currentPage = targetPage;
+
+  // Make it focusable and force VoiceOver to read the new screen's title
+  targetHeading.setAttribute("tabindex", "-1");
+  targetHeading.focus();
+}
+
+// ==============Event listeners===============
+// landing to home page
+startButton.addEventListener("click", () => {
+  navigateTo(homePage, homeHeading);
 });
 
-
-//=============DOM elements=================
-const roomCodeContainer = document.getElementById("room-code");
-const waitRoomBtn = document.getElementById("wait-room-btn");
-
-
-document.getElementById("create-server-btn").addEventListener("click", () => {
-  socket.send(JSON.stringify({ type: "create" }));
+//home to create waiting room page
+// createServerButton.addEventListener("click", () => {
+//   navigateTo(waitingRoomPage, waitingRoomHeading);
+// });
+document.addEventListener("room-created", (event) => {
+  navigateTo(waitingRoomPage, waitingRoomHeading);
 });
 
-socket.addEventListener("message", (event) => {
-  const message = JSON.parse(event.data);
+//waiting room to duration page
+waitRoomButton.addEventListener("click", () => {
+  navigateTo(durationPage, durationHeading);
+});
 
-  if (message.type === "error") {
-    console.log(message);
+// button to go to duration when both have joined a room
+document.addEventListener("peer-joined", () => {
+  waitRoomButton.classList.remove("hidden");
+});
+
+//duration to controler page
+allezAuSimulateurButton.addEventListener("click", () => {
+  navigateTo(controllerPage, controllerHeading);
+});
+
+//home to joining room page
+rejoindreServerButton.addEventListener("click", () => {
+  navigateTo(joiningRoomPage, joiningRoomHeading);
+});
+
+//joining room to listener page
+// sudmitButton.addEventListener("click", () => {
+//   navigateTo(listenerPage, listenerHeading);
+// });
+document.addEventListener("room-joined", (event) => {
+  listenerHeading.innerHTML = `Vous êtes dans serveur <br>${event.detail.roomCode}`;
+  navigateTo(listenerPage, listenerHeading);
+});
+
+//===========BACK BUTTON===============
+
+//back to landing
+backToLanding.addEventListener("click", () => {
+  navigateTo(landingPage, landingHeading);
+});
+// back to home page
+backToHome.addEventListener("click", () => {
+  navigateTo(homePage, homeHeading);
+});
+//back to waiting room
+backToWaitingRoom.addEventListener("click", () => {
+  navigateTo(waitingRoomPage, waitingRoomHeading);
+});
+
+//back to duration page
+backToDuration.addEventListener("click", () => {
+  navigateTo(durationPage, durationHeading);
+});
+
+//back to joining room page
+backToJoiningRoom.addEventListener("click", () => {
+  navigateTo(joiningRoomPage, joiningRoomHeading);
+});
+
+// back to home page from joining room
+backToHomeFromJoiningRoom.addEventListener("click", () => {
+  navigateTo(homePage, homeHeading);
+});
+
+//===========AUDIO===============
+
+// Melodie du Canada
+const audio = new Audio("audio/canadian_melody.wav")
+const playPauseBtn = document.getElementById("melody-du-canada-play-btn");
+const audioStatus = document.getElementById("audio-status");
+const replayBtn = document.getElementById("melody-du-canada-replay-btn");
+
+playPauseBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    playPauseBtn.innerHTML = ` <span class="material-symbols-outlined">pause</span>`; //change to pause icon
+    playPauseBtn.classList.remove("play");
+    playPauseBtn.classList.add("pause");
+  } else {
+    audio.pause();
+    playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
+    playPauseBtn.classList.remove("pause");
+    playPauseBtn.classList.add("play");
   }
-
-  if (message.type === "room-created") {
-    roomCodeContainer.textContent = message.roomCode;
-    console.log(message.roomCode)
-  }
 });
 
-/*SIMULATE SERVER CODE TO DELETE */
+// Optional: when audio ends, reset button text
+audio.addEventListener("ended", () => {
+  playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
+});
 
-setTimeout(() => {
-  waitRoomBtn.textContent = "Suivant";
-}, 2000);
+// Replay on click
+replayBtn.addEventListener("click", () => {
+  audio.currentTime = 0;
+  audio.play();
+});
 
-//display server nb according to user input
-let server_nb_input;
-document.getElementById("submit-btn").onclick = function () {
-  server_nb_input = document.getElementById("server-input").value;
-  console.log(server_nb_input);
-  document.getElementById("server-nb").textContent = server_nb_input;
-};
-
-//======= duration buttons=====
+//=======DURATION BUTTONS=====
 
 const buttons = document.querySelectorAll("#duration button:not(#allez-au-simulateur-btn)");
 

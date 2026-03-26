@@ -1,155 +1,85 @@
-//==========DOM elements============
-//buttons
-const startButton = document.getElementById("start-btn");
-const createServerButton = document.getElementById("create-server-btn");
-const rejoindreServerButton = document.getElementById("rejoindre-sever-btn");
-const waitRoomButton = document.getElementById("wait-room-btn");
-const allezAuSimulateurButton = document.getElementById("allez-au-simulateur-btn");
-const sudmitButton = document.getElementById("submit-btn");
+const socket = new WebSocket("ws://localhost:8080");
 
-//back buttons
-const backToLanding = document.getElementById("back-to-landing");
-const backToHome = document.getElementById("back-to-home");
-const backToWaitingRoom = document.getElementById("back-to-waiting-room");
-const backToDuration = document.getElementById("back-to-duration");
-const backToHomeFromJoiningRoom = document.getElementById("back-to-home-from-joining-room");
-const backToJoiningRoom = document.getElementById("back-to-joining-room");
+//=============DOM elements=================
+const roomCodeContainer = document.getElementById("room-code");
+const roomCodeInput = document.getElementById("server-input");
 
-//landing page
-const landingPage = document.getElementById("landing");
-const landingHeading = document.getElementById("landing-heading");
-
-//home page
-const homePage = document.getElementById("home");
-const homeHeading = document.getElementById("home-heading");
-
-
-//waiting room
-const waitingRoomPage = document.getElementById("waiting-room");
-const waitingRoomHeading = document.getElementById("waiting-room-heading");
-
-//duration
-const durationPage = document.getElementById("duration");
-const durationHeading = document.getElementById("duration-heading");
-
-//controller
-const controllerPage = document.getElementById("controller");
-const controllerHeading = document.getElementById("controller-heading");
-
-//joining room
-const joiningRoomPage = document.getElementById("joining-room");
-const joiningRoomHeading = document.getElementById("joining-room-heading");
-
-//listener
-const listenerPage = document.getElementById("listener");
-const listenerHeading = document.getElementById("listener-heading");
-
-//==========Page navigation functions==========
-let currentPage = landingPage;
-
-function navigateTo(targetPage, targetHeading) {
-  // Hide landing page and show home page
-  currentPage.classList.add("hidden");
-  targetPage.classList.remove("hidden");
-
-  // Set new current page
-  currentPage = targetPage;
-
-  // Make it focusable and force VoiceOver to read the new screen's title
-  targetHeading.setAttribute("tabindex", "-1");
-  targetHeading.focus();
-}
-
-// ==============Event listeners===============
-// landing to home page
-startButton.addEventListener("click", () => {
-  navigateTo(homePage, homeHeading);
+socket.addEventListener("open", () => {
+  console.log("Frontend: Connected to the server!");
 });
 
-//home to create waiting room page
-createServerButton.addEventListener("click", () => {
-  navigateTo(waitingRoomPage, waitingRoomHeading);
-});
-
-//waiting room to duration page
-waitRoomButton.addEventListener("click", () => {
-  navigateTo(durationPage, durationHeading);
-});
-
-//duration to controler page
-allezAuSimulateurButton.addEventListener("click", () => {
-  navigateTo(controllerPage, controllerHeading);
-});
-
-//home to joining room page
-rejoindreServerButton.addEventListener("click", () => {
-  navigateTo(joiningRoomPage, joiningRoomHeading);
-});
-
-//joining room to listener page
-sudmitButton.addEventListener("click", () => {
-  navigateTo(listenerPage, listenerHeading);
-});
-
-//===========BACK BUTTON===============
-
-//back to landing
-backToLanding.addEventListener("click", () => {
-  navigateTo(landingPage, landingHeading);
-});
-// back to home page
-backToHome.addEventListener("click", () => {
-  navigateTo(homePage, homeHeading);
-});
-//back to waiting room
-backToWaitingRoom.addEventListener("click", () => {
-  navigateTo(waitingRoomPage, waitingRoomHeading);
-});
-
-//back to duration page
-backToDuration.addEventListener("click", () => {
-  navigateTo(durationPage, durationHeading);
-});
-
-//back to joining room page
-backToJoiningRoom.addEventListener("click", () => {
-  navigateTo(joiningRoomPage, joiningRoomHeading);
-});
-
-// back to home page from joining room
-backToHomeFromJoiningRoom.addEventListener("click", () => {
-  navigateTo(homePage, homeHeading);
-});
-
-//===========AUDIO===============
-
-// Melodie du Canada
-const audio = new Audio("audio/canadian_melody.wav")
-const playPauseBtn = document.getElementById("melody-du-canada-play-btn");
-const audioStatus = document.getElementById("audio-status");
-const replayBtn = document.getElementById("melody-du-canada-replay-btn");
-
-playPauseBtn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play();
-    playPauseBtn.innerHTML = ` <span class="material-symbols-outlined">pause</span>`; //change to pause icon
-    playPauseBtn.classList.remove("play");
-    playPauseBtn.classList.add("pause");
+document.getElementById("create-server-btn").addEventListener("click", () => {
+  if (socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify({ type: "create" }));
   } else {
-    audio.pause();
-    playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
-    playPauseBtn.classList.remove("pause");
-    playPauseBtn.classList.add("play");
+    console.log("Socket not open yet");
   }
 });
 
-// Optional: when audio ends, reset button text
-audio.addEventListener("ended", () => {
-  playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
+document.getElementById("submit-btn").addEventListener("click", () => {
+  const roomCode = roomCodeInput.value.trim();
+
+  if (!roomCode) {
+    console.log("Please enter a room code");
+    return;
+  }
+
+  if (socket.readyState === WebSocket.OPEN) {
+    socket.send(
+      JSON.stringify({
+        type: "join",
+        roomCode,
+      }),
+    );
+  } else {
+    console.log("Socket not open yet");
+  }
 });
 
-// Replay on click
-replayBtn.addEventListener("click", () => {
-  audio.currentTime = 0;
-  audio.play();
+socket.addEventListener("message", (event) => {
+  const message = JSON.parse(event.data);
+  console.log(message);
+
+  if (message.type === "error") {
+    console.log("Server error:", message.message);
+    return;
+  }
+
+  if (message.type === "room-created") {
+    window.appState.currentRoomCode = message.roomCode;
+    window.appState.currentRole = "host";
+
+    roomCodeContainer.textContent = message.roomCode;
+
+    document.dispatchEvent(
+      new CustomEvent("room-created", {
+        detail: { roomCode: message.roomCode },
+      }),
+    );
+  }
+
+  if (message.type === "peer-joined") {
+    document.dispatchEvent(new Event("peer-joined"));
+  }
+
+  if (message.type === "room-joined") {
+      window.appState.currentRoomCode = message.roomCode;
+      window.appState.currentRole = "listener";
+
+      document.dispatchEvent(
+        new CustomEvent("room-joined", {
+          detail: { roomCode: message.roomCode },
+        }),
+      );
+    }
+
+  if (message.type === "duration-set") {
+    console.log("Host selected duration:", message.duration);
+  }
+
+  if (message.type === "duration-updated") {
+    console.log("Listener received duration:", message.duration);
+  }
 });
+
+
