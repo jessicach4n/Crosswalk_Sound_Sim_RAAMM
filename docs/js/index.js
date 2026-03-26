@@ -20,8 +20,9 @@ document.getElementById("submit-btn").onclick = function () {
 
 //======= duration buttons=====
 
-const buttons = document.querySelectorAll("#duration button:not(#allez-au-simulateur-btn)");
-
+const buttons = document.querySelectorAll(
+  "#duration button:not(#allez-au-simulateur-btn):not(#back-to-waiting-room)"
+);
 //loop through all buttons in class duration-button
 buttons.forEach(button => {
   button.addEventListener("click", () => {
