@@ -4,6 +4,127 @@ const socket = new WebSocket("ws://localhost:8080");
 const roomCodeContainer = document.getElementById("room-code");
 const roomCodeInput = document.getElementById("server-input");
 
+const playPauseBtn = document.getElementById("melody-du-canada-play-btn");
+const replayBtn = document.getElementById("melody-du-canada-replay-btn");
+
+// ============= Audio =============
+const soundControllers = {
+  canadian: {
+    audio: new Audio("audio/canadian_melody.wav"),
+    playBtn: document.getElementById("melody-du-canada-play-btn"),
+    replayBtn: document.getElementById("melody-du-canada-replay-btn"),
+  },
+  beep: {
+    audio: new Audio("audio/beep_beep.wav"),
+    playBtn: document.getElementById("beep-beep-play-btn"),
+    replayBtn: document.getElementById("beep-beep-replay-btn"),
+  },
+  cuckoo: {
+    audio: new Audio("audio/cuckoo.wav"),
+    playBtn: document.getElementById("cuckoo-play-btn"),
+    replayBtn: document.getElementById("cuckoo-replay-btn"),
+  },
+};
+
+function setButtonState(soundName, isPlaying) {
+  const controller = soundControllers[soundName];
+  if (!controller) return;
+
+  controller.playBtn.innerHTML = isPlaying
+    ? '<span class="material-symbols-outlined">pause</span>'
+    : '<span class="material-symbols-outlined">play_arrow</span>';
+
+  controller.playBtn.classList.toggle("pause", isPlaying);
+  controller.playBtn.classList.toggle("play", !isPlaying);
+}
+
+let currentSound = null;
+
+function scheduleSound(soundName, startAt) {
+  const controller = soundControllers[soundName];
+
+  if (!controller) {
+    console.error("Unknown sound:", soundName);
+    return;
+  }
+
+  const { audio } = controller;
+  const delay = startAt - Date.now();
+
+  const playAudio = async () => {
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      await audio.play();
+      console.log(`Playing ${soundName}`);
+    } catch (err) {
+      console.error("Audio play failed:", err);
+    }
+  };
+
+  if (delay <= 0) {
+    playAudio();
+  } else {
+    setTimeout(playAudio, delay);
+  }
+}
+
+Object.entries(soundControllers).forEach(([soundName, controller]) => {
+  controller.audio.addEventListener("ended", () => {
+    if (currentSound === soundName) {
+      currentSound = null;
+    }
+    setButtonState(soundName, false);
+  });
+});
+
+function requestPlay(soundName) {
+  if (window.appState.currentRole !== "host") {
+    console.log("Only the host can start playback");
+    return;
+  }
+
+  if (!window.appState.currentRoomCode) {
+    console.log("No room code available");
+    return;
+  }
+
+  if (socket.readyState !== WebSocket.OPEN) {
+    console.log("Socket not open");
+    return;
+  }
+
+  socket.send(
+    JSON.stringify({
+      type: "play-sound",
+      roomCode: window.appState.currentRoomCode,
+      sound: soundName,
+    }),
+  );
+}
+
+soundControllers.canadian.playBtn.addEventListener("click", () => {
+  requestPlay("canadian");
+});
+
+soundControllers.beep.playBtn.addEventListener("click", () => {
+  requestPlay("beep");
+});
+
+soundControllers.cuckoo.playBtn.addEventListener("click", () => {
+  requestPlay("cuckoo");
+});
+
+document.addEventListener("play-sound", () => {
+  socket.send(
+    JSON.stringify({
+      type: "play-sound",
+      roomCode: window.appState.currentRoomCode,
+      sound: "canadian",
+    }),
+  );
+});
+
 socket.addEventListener("open", () => {
   console.log("Frontend: Connected to the server!");
 });
@@ -80,6 +201,12 @@ socket.addEventListener("message", (event) => {
   if (message.type === "duration-updated") {
     console.log("Listener received duration:", message.duration);
   }
+
+  if (message.type === "play-sound") {
+    scheduleSound(message.sound, message.startAt);
+  }
 });
+
+
 
 

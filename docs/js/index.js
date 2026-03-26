@@ -133,39 +133,6 @@ backToHomeFromJoiningRoom.addEventListener("click", () => {
   navigateTo(homePage, homeHeading);
 });
 
-//===========AUDIO===============
-
-// Melodie du Canada
-const audio = new Audio("audio/canadian_melody.wav")
-const playPauseBtn = document.getElementById("melody-du-canada-play-btn");
-const audioStatus = document.getElementById("audio-status");
-const replayBtn = document.getElementById("melody-du-canada-replay-btn");
-
-playPauseBtn.addEventListener("click", () => {
-  if (audio.paused) {
-    audio.play();
-    playPauseBtn.innerHTML = ` <span class="material-symbols-outlined">pause</span>`; //change to pause icon
-    playPauseBtn.classList.remove("play");
-    playPauseBtn.classList.add("pause");
-  } else {
-    audio.pause();
-    playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
-    playPauseBtn.classList.remove("pause");
-    playPauseBtn.classList.add("play");
-  }
-});
-
-// Optional: when audio ends, reset button text
-audio.addEventListener("ended", () => {
-  playPauseBtn.innerHTML = `<span class="material-symbols-outlined">play_arrow</span>`; // change to play icon
-});
-
-// Replay on click
-replayBtn.addEventListener("click", () => {
-  audio.currentTime = 0;
-  audio.play();
-});
-
 //=======DURATION BUTTONS=====
 
 const buttons = document.querySelectorAll("#duration button:not(#allez-au-simulateur-btn)");

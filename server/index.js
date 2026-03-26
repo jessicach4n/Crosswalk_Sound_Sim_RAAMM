@@ -156,6 +156,50 @@ wss.on("connection", (socket) => {
         }
       });
     }
+    else if (message.type === "play-sound") {
+      const room = rooms.get(message.roomCode);
+
+      if (!room) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Room not found",
+          }),
+        );
+        return;
+      }
+
+      if (room.host !== socket) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Only the host can start the sound",
+          }),
+        );
+        return;
+      }
+
+      const leadMs = 0;
+      const listenerOffsetMs = 1350;
+
+      const now = Date.now();
+      const hostStartAt = now + leadMs;
+      const listenerStartAt = hostStartAt + listenerOffsetMs;
+
+      room.members.forEach((member) => {
+        if (member.readyState !== WebSocket.OPEN) return;
+
+        const isHost = member === room.host;
+
+        member.send(
+          JSON.stringify({
+            type: "play-sound",
+            sound: message.sound,
+            startAt: isHost ? hostStartAt : listenerStartAt,
+          }),
+        );
+      });
+    }
     else {
         socket.send(JSON.stringify({ type: 'error', message: 'Invalid action' }));
     }
