@@ -22,9 +22,17 @@
     class="sr-only"
   ></div>
 
+  
   <main class="screen">
+    <section id="loading">
+      <p id="loading-heading">Connexion en cours...</p>
+      <p id="loading-error" class="hidden">
+        Impossible de se connecter au serveur. Veuillez réessayer.
+      </p>
+      <button id="retry-btn" class="hidden">Réessayer</button>
+    </section>
 
-    <section id="landing" class="landing-page" aria-labelledby="landing-heading">
+    <section id="landing" class="landing-page hidden" aria-labelledby="landing-heading">
       <h1 id="landing-heading">SIMULATION DES FEUX SONORES</h1>
       <p>
         Cette application permet de simuler des passages pour piétons munis d'un signal sonore, dans le cadre des ateliers et

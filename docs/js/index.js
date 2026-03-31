@@ -45,8 +45,37 @@ const listenerPage = document.getElementById("listener");
 const listenerHeading = document.getElementById("listener-heading");
 const listenerRoomCode = document.getElementById("room-code-listener");
 
+//loading
+const loadingPage = document.getElementById("loading");
+const loadingError = document.getElementById("loading-error");
+const retryBtn = document.getElementById("retry-btn");
+
+socket.addEventListener("open", () => {
+  console.log("Frontend: Connected to the server!");
+  loadingError.classList.add("hidden");
+  retryBtn.classList.add("hidden");
+  navigateTo(landingPage, landingHeading);
+});
+
+socket.addEventListener("close", () => {
+  if (currentPage !== loadingPage) {
+    navigateTo(loadingPage, document.getElementById("loading-heading"));
+  }
+  loadingError.classList.remove("hidden");
+  retryBtn.classList.remove("hidden");
+});
+
+socket.addEventListener("error", () => {
+  loadingError.classList.remove("hidden");
+  retryBtn.classList.remove("hidden");
+});
+
+retryBtn.addEventListener("click", () => {
+  window.location.reload();
+});
+
 //==========Page navigation functions==========
-let currentPage = landingPage;
+let currentPage = loadingPage;
 
 function navigateTo(targetPage, targetHeading) {
   // Signal the audio file to stop and broadcast
