@@ -212,7 +212,7 @@ wss.on("connection", (socket) => {
       }
 
       const leadMs = 0;
-      const listenerOffsetMs = 600;
+      const listenerOffsetMs = 580;
 
       const now = Date.now();
       const hostStartAt = now + leadMs;
