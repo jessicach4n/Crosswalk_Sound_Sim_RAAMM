@@ -49,16 +49,18 @@ const listenerRoomCode = document.getElementById("room-code-listener");
 let currentPage = landingPage;
 
 function navigateTo(targetPage, targetHeading) {
-  stopAllAudio(); 
+  // Signal the audio file to stop and broadcast
+  document.dispatchEvent(new CustomEvent("page-leaving", {
+    detail: {
+      fromController: currentPage === controllerPage,
+      fromListener: currentPage === listenerPage,
+    }
+  }));
 
-  // Hide landing page and show home page
   currentPage.classList.add("hidden");
   targetPage.classList.remove("hidden");
-
-  // Set new current page
   currentPage = targetPage;
 
-  // Make it focusable and force VoiceOver to read the new screen's title
   targetHeading.setAttribute("tabindex", "-1");
   targetHeading.focus();
 }
@@ -96,6 +98,21 @@ rejoindreServerButton.addEventListener("click", () => {
 document.addEventListener("room-joined", (event) => {
   listenerRoomCode.innerHTML = `${event.detail.roomCode}`;
   navigateTo(listenerPage, listenerHeading);
+});
+
+const announcer = document.getElementById("announcer");
+
+document.addEventListener("navigate-to", (event) => {
+  stopAllAudio();
+  if (event.detail.page === "landing") {
+    // Clear first so it re-triggers if the same message fires twice
+    announcer.textContent = "";
+    requestAnimationFrame(() => {
+      announcer.textContent =
+        "Vous avez été déconnecté de la salle. Retour à l'accueil.";
+    });
+    navigateTo(landingPage, landingHeading);
+  }
 });
 
 //===========BACK BUTTON===============

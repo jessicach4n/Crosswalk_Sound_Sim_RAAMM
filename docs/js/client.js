@@ -5,10 +5,6 @@ const roomCodeContainer = document.getElementById("room-code");
 const roomCodeInput = document.getElementById("server-input");
 
 // ============= Audio =============
-window.addEventListener("pagehide", () => {
-  cancelCanadianMelody();
-});
-
 const soundControllers = {
   canadian: {
     audio: new Audio("audio/canadian_melody.wav"),
@@ -101,7 +97,20 @@ function requestPlay(soundName) {
 }
 
 function stopAllAudio() {
-  if (window.appState.currentRole !== "host") return; // ← guard
+  cancelCanadianMelody();
+  Object.values(soundControllers).forEach(({ audio }) => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+  Object.keys(soundControllers).forEach((name) => setButtonState(name, false));
+}
+
+function broadcastStop() {
+  if (
+    window.appState.currentRole === "host" &&
+    window.appState.currentRoomCode &&
+    socket.readyState === WebSocket.OPEN
+  ) {
     socket.send(
       JSON.stringify({
         type: "stop-sound",
@@ -109,16 +118,34 @@ function stopAllAudio() {
         sound: "canadian",
       }),
     );
+  }
 }
+
+document.addEventListener("page-leaving", (event) => {
+  broadcastStop();
+  stopAllAudio();
+
+  if (event.detail.fromController || event.detail.fromListener) {
+    window.appState.currentRoomCode = null;
+    window.appState.currentRole = null;
+  }
+});
+
+window.addEventListener("pagehide", () => {
+  broadcastStop();
+  stopAllAudio();
+});
 
 soundControllers.canadian.playBtn.addEventListener("click", () => {
   const isPlaying = soundControllers.canadian.playBtn.classList.contains("pause");
 
   if (isPlaying) {
-    stopAllAudio();
+    broadcastStop(); // tell the listener
+    stopAllAudio();  // stop locally
   } else {
     requestPlay("canadian");
   }
+
 });
 
 soundControllers.beep.playBtn.addEventListener("click", () => {
@@ -239,6 +266,13 @@ socket.addEventListener("message", (event) => {
     if (message.sound === "canadian") {
       cancelCanadianMelody();
     }
+  }
+
+  if (message.type === "room-closed") {
+    cancelCanadianMelody();
+    window.appState.currentRoomCode = null;
+    window.appState.currentRole = null;
+    document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "home" } }));
   }
 });
 

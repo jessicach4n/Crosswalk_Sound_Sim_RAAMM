@@ -212,7 +212,7 @@ wss.on("connection", (socket) => {
       }
 
       const leadMs = 0;
-      const listenerOffsetMs = 580;
+      const listenerOffsetMs = 550; // Sync offset
 
       const now = Date.now();
       const hostStartAt = now + leadMs;
@@ -273,6 +273,22 @@ wss.on("connection", (socket) => {
 
   socket.on("close", () => {
     console.log("Client disconnected");
+
+    const roomCode = socket.roomCode;
+    if (!roomCode) return;
+
+    const room = rooms.get(roomCode);
+    if (!room) return;
+
+    // Notify all remaining members the room is closing
+    room.members.forEach((member) => {
+      if (member !== socket && member.readyState === WebSocket.OPEN) {
+        member.send(JSON.stringify({ type: "room-closed" }));
+      }
+    });
+
+    rooms.delete(roomCode);
+    console.log(`Room ${roomCode} deleted`);
   });
 });
 
