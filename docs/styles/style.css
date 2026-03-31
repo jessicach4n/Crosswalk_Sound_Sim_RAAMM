@@ -19,9 +19,8 @@
 }
 
 section {
-    text-align: center;
     max-width: 98%;
-    margin: 20% auto;
+    margin: 20% 28px;
 }
 
 .hidden {
@@ -40,9 +39,8 @@ footer {
 }
 
 h1 {
-    font-size: 28px;
+    font-size: 24px;
     color: #000;
-    text-align: center;
     font-weight: 700;
 }
 
@@ -67,6 +65,9 @@ input {
     align-items: center;
 }
 
+#room-code {
+    font-size: 42px;
+}
 
 .back-arrow {
     position: absolute;
@@ -86,7 +87,7 @@ input {
 }
 
 button {
-    width: 90%;
+    width: 100%;
     max-width: 100%;
     margin: 0 auto;
     display: inline-flex;
@@ -108,8 +109,6 @@ button {
     cursor: pointer;
 }
 
-
-
 button.selected {
     background: #005E98;
     color: #FFF;
@@ -121,9 +120,6 @@ button.unselected {
     background: #DBDBDB;
     color: black;
 }
-
-
-
 
 .subcontrollers {
     width: 90%;
