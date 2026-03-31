@@ -66,10 +66,6 @@ startButton.addEventListener("click", () => {
   navigateTo(homePage, homeHeading);
 });
 
-//home to create waiting room page
-// createServerButton.addEventListener("click", () => {
-//   navigateTo(waitingRoomPage, waitingRoomHeading);
-// });
 document.addEventListener("room-created", (event) => {
   navigateTo(waitingRoomPage, waitingRoomHeading);
 });
@@ -94,10 +90,6 @@ rejoindreServerButton.addEventListener("click", () => {
   navigateTo(joiningRoomPage, joiningRoomHeading);
 });
 
-//joining room to listener page
-// sudmitButton.addEventListener("click", () => {
-//   navigateTo(listenerPage, listenerHeading);
-// });
 document.addEventListener("room-joined", (event) => {
   listenerHeading.innerHTML = `Vous êtes dans serveur <br>${event.detail.roomCode}`;
   navigateTo(listenerPage, listenerHeading);

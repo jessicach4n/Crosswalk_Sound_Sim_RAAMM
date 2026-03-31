@@ -156,6 +156,38 @@ wss.on("connection", (socket) => {
         }
       });
     }
+    else if (message.type === "prepare-sound") {
+      const room = rooms.get(message.roomCode);
+
+      if (!room) {
+        socket.send(JSON.stringify({ type: "error", message: "Room not found" }));
+        return;
+      }
+
+      if (room.host !== socket) {
+        socket.send(JSON.stringify({ type: "error", message: "Only the host can prepare sound" }));
+        return;
+      }
+
+      room.members.forEach((member) => {
+        if (member.readyState !== WebSocket.OPEN) return;
+        member.send(JSON.stringify({ type: "prepare-sound", sound: message.sound }));
+      });
+    }
+
+    else if (message.type === "listener-ready") {
+      const room = rooms.get(message.roomCode);
+
+      if (!room) {
+        socket.send(JSON.stringify({ type: "error", message: "Room not found" }));
+        return;
+      }
+
+      // Forward to host so it knows listener is primed and waiting
+      if (room.host && room.host.readyState === WebSocket.OPEN) {
+        room.host.send(JSON.stringify({ type: "listener-ready", sound: message.sound }));
+      }
+    }
     else if (message.type === "play-sound") {
       const room = rooms.get(message.roomCode);
 
@@ -180,7 +212,7 @@ wss.on("connection", (socket) => {
       }
 
       const leadMs = 0;
-      const listenerOffsetMs = 1350;
+      const listenerOffsetMs = 600;
 
       const now = Date.now();
       const hostStartAt = now + leadMs;
@@ -196,6 +228,40 @@ wss.on("connection", (socket) => {
             type: "play-sound",
             sound: message.sound,
             startAt: isHost ? hostStartAt : listenerStartAt,
+          }),
+        );
+      });
+    }
+    else if (message.type === "stop-sound") {
+      const room = rooms.get(message.roomCode);
+
+      if (!room) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Room not found",
+          }),
+        );
+        return;
+      }
+
+      if (room.host !== socket) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "Only the host can stop the sound",
+          }),
+        );
+        return;
+      }
+
+      room.members.forEach((member) => {
+        if (member.readyState !== WebSocket.OPEN) return;
+
+        member.send(
+          JSON.stringify({
+            type: "stop-sound",
+            sound: message.sound,
           }),
         );
       });
