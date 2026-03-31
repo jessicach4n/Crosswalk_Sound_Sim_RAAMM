@@ -76,6 +76,7 @@
         <h1 id="waiting-room-heading">Votre numero de serveur est:</h1>
         <p
           id="room-code"
+          class="room-code"
           role="status"
           aria-live="polite"
           aria-labelledby="room-label"
@@ -222,7 +223,16 @@
       </button>
       <div class="center_content">
         <p aria-live="polite" id="status-server" class="sr-only" lang="fr"></p>
-        <h1 id="listener-heading">Vous êtes dans serveur <br />123456</h1>
+        <h1 id="listener-heading">Vous êtes dans serveur</h1>
+        <p
+          id="room-code-listener"
+          class="room-code"
+          role="status"
+          aria-live="polite"
+          aria-labelledby="room-label"
+          lang="fr"
+        ></p>
+        
         <p>
           Veuillez attendre que le créateur du serveur commence la démonstration
         </p>

@@ -43,6 +43,7 @@ const joiningRoomHeading = document.getElementById("joining-room-heading");
 //listener
 const listenerPage = document.getElementById("listener");
 const listenerHeading = document.getElementById("listener-heading");
+const listenerRoomCode = document.getElementById("room-code-listener");
 
 //==========Page navigation functions==========
 let currentPage = landingPage;
@@ -93,7 +94,7 @@ rejoindreServerButton.addEventListener("click", () => {
 });
 
 document.addEventListener("room-joined", (event) => {
-  listenerHeading.innerHTML = `Vous êtes dans serveur <br>${event.detail.roomCode}`;
+  listenerRoomCode.innerHTML = `${event.detail.roomCode}`;
   navigateTo(listenerPage, listenerHeading);
 });
 
