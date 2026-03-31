@@ -76,6 +76,7 @@ retryBtn.addEventListener("click", () => {
 
 //==========Page navigation functions==========
 let currentPage = loadingPage;
+let documentTitle = document.getElementsByTagName("title")[0];
 
 function navigateTo(targetPage, targetHeading) {
   // Signal the audio file to stop and broadcast
@@ -92,6 +93,33 @@ function navigateTo(targetPage, targetHeading) {
 
   targetHeading.setAttribute("tabindex", "-1");
   targetHeading.focus();
+
+  // Update the document title based on the target page
+  switch (targetPage) {
+    case landingPage:
+      documentTitle.textContent = "Simulateur de feux sonores - RAAMM";
+      break;
+    case homePage:
+      documentTitle.textContent = "Menu - Simulateur de feux sonores - RAAMM";
+      break;
+    case waitingRoomPage:
+      documentTitle.textContent = "Salle d'attente - Simulateur de feux sonores - RAAMM";
+      break;
+    case durationPage:
+      documentTitle.textContent = "Durée - Simulateur de feux sonores - RAAMM";
+      break;
+    case controllerPage:
+      documentTitle.textContent = "Contrôleur - Simulateur de feux sonores - RAAMM";
+      break;
+    case joiningRoomPage:
+      documentTitle.textContent = "Rejoindre une salle - Simulateur de feux sonores - RAAMM";
+      break;
+    case listenerPage:
+      documentTitle.textContent = "Écouteur - Simulateur de feux sonores - RAAMM";
+      break;
+    default:
+      documentTitle.textContent = "Simulateur de feux sonores - RAAMM";
+  }
 }
 
 // ==============Event listeners===============
