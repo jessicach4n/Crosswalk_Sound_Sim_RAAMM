@@ -9,17 +9,14 @@ const soundControllers = {
   canadian: {
     audio: new Audio("audio/canadian_melody.wav"),
     playBtn: document.getElementById("melody-du-canada-play-btn"),
-    replayBtn: document.getElementById("melody-du-canada-replay-btn"),
   },
   beep: {
     audio: new Audio("audio/beep_beep.wav"),
     playBtn: document.getElementById("beep-beep-play-btn"),
-    replayBtn: document.getElementById("beep-beep-replay-btn"),
   },
   cuckoo: {
     audio: new Audio("audio/cuckoo.wav"),
     playBtn: document.getElementById("cuckoo-play-btn"),
-    replayBtn: document.getElementById("cuckoo-replay-btn"),
   },
 };
 
@@ -114,11 +111,6 @@ soundControllers.canadian.playBtn.addEventListener("click", () => {
   } else {
     requestPlay("canadian");
   }
-});
-
-soundControllers.canadian.replayBtn.addEventListener("click", () => {
-  cancelCanadianMelody();
-  requestPlay("canadian");
 });
 
 soundControllers.beep.playBtn.addEventListener("click", () => {
