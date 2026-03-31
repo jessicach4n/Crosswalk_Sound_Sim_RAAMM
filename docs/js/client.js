@@ -170,9 +170,11 @@ document.getElementById("create-server-btn").addEventListener("click", () => {
 
 document.getElementById("submit-btn").addEventListener("click", () => {
   const roomCode = roomCodeInput.value.trim();
+  let invalidCodeError = document.getElementById("invalid-code-error");
 
   if (!roomCode) {
-    console.log("Please enter a room code");
+    invalidCodeError.textContent = "Veillez entrer un code valide.";
+    invalidCodeError.classList.remove("hidden");
     return;
   }
 
@@ -194,6 +196,10 @@ socket.addEventListener("message", (event) => {
 
   if (message.type === "error") {
     console.log("Server error:", message.message);
+    if (message.message.includes("Room not found")) {
+      document.getElementById("invalid-code-error").textContent = "Le code soumis est invalide.";
+      document.getElementById("invalid-code-error").classList.remove("hidden");
+    }
     return;
   }
 
