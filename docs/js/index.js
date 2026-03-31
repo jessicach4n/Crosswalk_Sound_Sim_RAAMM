@@ -48,6 +48,8 @@ const listenerHeading = document.getElementById("listener-heading");
 let currentPage = landingPage;
 
 function navigateTo(targetPage, targetHeading) {
+  stopAllAudio(); 
+
   // Hide landing page and show home page
   currentPage.classList.add("hidden");
   targetPage.classList.remove("hidden");

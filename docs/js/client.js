@@ -5,6 +5,10 @@ const roomCodeContainer = document.getElementById("room-code");
 const roomCodeInput = document.getElementById("server-input");
 
 // ============= Audio =============
+window.addEventListener("pagehide", () => {
+  cancelCanadianMelody();
+});
+
 const soundControllers = {
   canadian: {
     audio: new Audio("audio/canadian_melody.wav"),
@@ -96,11 +100,8 @@ function requestPlay(soundName) {
   );
 }
 
-soundControllers.canadian.playBtn.addEventListener("click", () => {
-  const isPlaying = soundControllers.canadian.playBtn.classList.contains("pause");
-
-  if (isPlaying) {
-    if (window.appState.currentRole !== "host") return; // ← guard
+function stopAllAudio() {
+  if (window.appState.currentRole !== "host") return; // ← guard
     socket.send(
       JSON.stringify({
         type: "stop-sound",
@@ -108,6 +109,13 @@ soundControllers.canadian.playBtn.addEventListener("click", () => {
         sound: "canadian",
       }),
     );
+}
+
+soundControllers.canadian.playBtn.addEventListener("click", () => {
+  const isPlaying = soundControllers.canadian.playBtn.classList.contains("pause");
+
+  if (isPlaying) {
+    stopAllAudio();
   } else {
     requestPlay("canadian");
   }
