@@ -1,7 +1,15 @@
 const WebSocket = require("ws");
 const crypto = require("crypto");
 
-const wss = new WebSocket.Server({ port: 8080 });
+const ALLOWED_ORIGINS = ["https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM/"]; // TODO: change to RAAMM domain
+
+const wss = new WebSocket.Server({
+  port: 8080,
+  verifyClient: ({ origin }) => {
+    if (!origin) return false;
+    return ALLOWED_ORIGINS.includes(origin);
+  },
+});
 
 const rooms = new Map();
 
