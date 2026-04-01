@@ -207,7 +207,7 @@ socket.addEventListener("message", (event) => {
       navigateTo(homePage, homeHeading);
       return;
     }
-    if (message.message.includes("Room not found")) {
+    if (message.message.includes("Room not found") || message.message.includes("Invalid room code")) {
       document.getElementById("invalid-code-error").textContent = "Le code soumis est invalide.";
       document.getElementById("invalid-code-error").classList.remove("hidden");
     }
