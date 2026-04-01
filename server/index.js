@@ -70,6 +70,12 @@ wss.on("connection", (socket) => {
     }
 
     if (message.type == "create") {
+      if (rooms.size >= 100) {
+        socket.send(
+          JSON.stringify({ type: "error", message: "Server is full" })
+        );
+        return;
+      }
       const roomCode = generateRoomCode();
 
       rooms.set(roomCode, {
