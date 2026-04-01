@@ -132,7 +132,7 @@ document.addEventListener("page-leaving", (event) => {
   }
   stopAllAudio();
 
-  if (event.detail.fromController || event.detail.fromListener) {
+  if (event.detail.fromListener) {
     window.appState.currentRoomCode = null;
     window.appState.currentRole = null;
   }
@@ -284,7 +284,7 @@ socket.addEventListener("message", (event) => {
       cancelCanadianMelody();
     }
   }
-  
+
 if (message.type === "room-closed") {
   cancelCanadianMelody();
   window.appState.currentRoomCode = null;

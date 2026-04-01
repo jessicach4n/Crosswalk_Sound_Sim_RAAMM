@@ -329,8 +329,10 @@ wss.on("connection", (socket) => {
         }
       });
 
+      room.members.forEach((member) => {
+        member.roomCode = null;
+      });
       rooms.delete(roomCode);
-      socket.roomCode = null;
       console.log(`Room ${roomCode} closed by host`);
     }
     else {
@@ -354,8 +356,11 @@ wss.on("connection", (socket) => {
       }
     });
 
-    rooms.delete(roomCode);
-    console.log(`Room ${roomCode} deleted`);
+    room.members.forEach((member) => {
+        member.roomCode = null;
+      });
+      rooms.delete(roomCode);
+      console.log(`Room ${roomCode} deleted`);
   });
 });
 
