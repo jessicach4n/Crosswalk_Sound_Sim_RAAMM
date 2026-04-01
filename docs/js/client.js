@@ -1,4 +1,9 @@
-const socket = new WebSocket("ws://localhost:8080");
+const WS_URL =
+  location.hostname === "localhost"
+    ? "ws://localhost:8080"
+    : `wss://${location.hostname}`;
+
+const socket = new WebSocket(WS_URL);
 
 //=============DOM elements=================
 const roomCodeContainer = document.getElementById("room-code");
