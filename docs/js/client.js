@@ -82,7 +82,7 @@ Object.entries(soundControllers).forEach(([soundName, controller]) => {
 });
 
 function requestPlay(soundName) {
-  console.log("resquest play")
+  console.log("request play")
   if (window.appState.currentRole !== "host") return;
     console.log("is host")
 
@@ -127,7 +127,9 @@ function broadcastStop() {
 }
 
 document.addEventListener("page-leaving", (event) => {
-  broadcastStop();
+  if (event.detail.fromController) {
+    broadcastStop();
+  }
   stopAllAudio();
 
   if (event.detail.fromController || event.detail.fromListener) {
@@ -201,6 +203,10 @@ socket.addEventListener("message", (event) => {
 
   if (message.type === "error") {
     console.log("Server error:", message.message);
+    if (message.message === "You already have a room") {
+      navigateTo(homePage, homeHeading);
+      return;
+    }
     if (message.message.includes("Room not found")) {
       document.getElementById("invalid-code-error").textContent = "Le code soumis est invalide.";
       document.getElementById("invalid-code-error").classList.remove("hidden");
@@ -278,13 +284,13 @@ socket.addEventListener("message", (event) => {
       cancelCanadianMelody();
     }
   }
-
-  if (message.type === "room-closed") {
-    cancelCanadianMelody();
-    window.appState.currentRoomCode = null;
-    window.appState.currentRole = null;
-    document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "home" } }));
-  }
+  
+if (message.type === "room-closed") {
+  cancelCanadianMelody();
+  window.appState.currentRoomCode = null;
+  window.appState.currentRole = null;
+  document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "landing" } }));
+}
 });
 
 

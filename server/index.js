@@ -76,6 +76,17 @@ wss.on("connection", (socket) => {
         );
         return;
       }
+
+      if (socket.roomCode) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "You already have a room",
+          })
+        );
+        return;
+      }
+
       const roomCode = generateRoomCode();
 
       rooms.set(roomCode, {
@@ -304,6 +315,23 @@ wss.on("connection", (socket) => {
           }),
         );
       });
+    }
+    else if (message.type === "leave-room") {
+      const roomCode = socket.roomCode;
+      if (!roomCode) return;
+
+      const room = rooms.get(roomCode);
+      if (!room) return;
+
+      room.members.forEach((member) => {
+        if (member !== socket && member.readyState === WebSocket.OPEN) {
+          member.send(JSON.stringify({ type: "room-closed" }));
+        }
+      });
+
+      rooms.delete(roomCode);
+      socket.roomCode = null;
+      console.log(`Room ${roomCode} closed by host`);
     }
     else {
         socket.send(JSON.stringify({ type: 'error', message: 'Invalid action' }));

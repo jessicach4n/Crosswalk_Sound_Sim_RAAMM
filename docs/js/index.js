@@ -180,6 +180,19 @@ backToLanding.addEventListener("click", () => {
 });
 // back to home page
 backToHome.addEventListener("click", () => {
+  if (
+    window.appState.currentRoomCode &&
+    socket.readyState === WebSocket.OPEN
+  ) {
+    socket.send(
+      JSON.stringify({
+        type: "leave-room",
+        roomCode: window.appState.currentRoomCode,
+      })
+    );
+    window.appState.currentRoomCode = null;
+    window.appState.currentRole = null;
+  }
   navigateTo(homePage, homeHeading);
 });
 //back to waiting room
