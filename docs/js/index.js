@@ -153,7 +153,7 @@ rejoindreServerButton.addEventListener("click", () => {
 });
 
 document.addEventListener("room-joined", (event) => {
-  listenerRoomCode.innerHTML = `${event.detail.roomCode}`;
+	listenerRoomCode.textContent = event.detail.roomCode;
   navigateTo(listenerPage, listenerHeading);
 });
 
