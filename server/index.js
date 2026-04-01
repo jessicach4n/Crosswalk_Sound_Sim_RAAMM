@@ -1,7 +1,7 @@
 const WebSocket = require("ws");
 const crypto = require("crypto");
 
-const ALLOWED_ORIGINS = ["https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM/"]; // TODO: change to RAAMM domain
+const ALLOWED_ORIGINS = ["https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM", "http://localhost:5500"]; // TODO: change to RAAMM domain
 
 const wss = new WebSocket.Server({
   port: 8080,
