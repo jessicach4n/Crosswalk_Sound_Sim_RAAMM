@@ -157,7 +157,7 @@ socket.on("message", (data) => {
       }
     }
     else if (message.type === "set-duration") {
-      const room = room.get(message.roomCode);
+      const room = rooms.get(message.roomCode);
       if (!room) {
         socket.send(
           JSON.stringify({
