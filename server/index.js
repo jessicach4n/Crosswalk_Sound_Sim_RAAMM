@@ -36,15 +36,40 @@ wss.on("connection", (socket) => {
 
     try {
       message = JSON.parse(data.toString());
-    }
-    catch (err) {
+    } catch (err) {
       socket.send(
-        JSON.stringify({type: "error", message: "Invalid JSON: " + err})
+        JSON.stringify({ type: "error", message: "Invalid message format" })
       );
       return;
     }
 
-    if (message.type == 'create') {
+    const VALID_SOUNDS = ["canadian", "beep", "cuckoo"];
+    const ROOM_CODE_REGEX = /^[A-Z2-9]{6}$/;
+
+    // Validate roomCode if present
+    if (
+      message.roomCode !== undefined &&
+      (typeof message.roomCode !== "string" ||
+        !ROOM_CODE_REGEX.test(message.roomCode))
+    ) {
+      socket.send(
+        JSON.stringify({ type: "error", message: "Invalid room code" })
+      );
+      return;
+    }
+
+    // Validate sound if present
+    if (
+      message.sound !== undefined &&
+      !VALID_SOUNDS.includes(message.sound)
+    ) {
+      socket.send(
+        JSON.stringify({ type: "error", message: "Invalid sound" })
+      );
+      return;
+    }
+
+    if (message.type == "create") {
       const roomCode = generateRoomCode();
 
       rooms.set(roomCode, {
