@@ -31,7 +31,14 @@ wss.on("connection", (socket) => {
 
   socket.roomCode = null;
 
-  socket.on("message", (data) => {
+socket.on("message", (data) => {
+    if (data.length > 1024) {
+      socket.send(
+        JSON.stringify({ type: "error", message: "Message too large" })
+      );
+      return;
+    }
+
     let message;
 
     try {
