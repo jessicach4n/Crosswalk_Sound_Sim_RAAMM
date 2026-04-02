@@ -21,7 +21,7 @@ const rooms = new Map();
 
 function generateRoomCode() {
   const charsAlpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const charsNum = "123456789";
+  const charsNum = "23456789";
   let code;
 
   do {
