@@ -5,7 +5,6 @@ import { socket, stopAllAudio } from "./client.js";
 //buttons
 const startButton = document.getElementById("start-btn");
 const instructionButton = document.getElementById("instruction-btn");
-const createServerButton = document.getElementById("create-server-btn");
 const rejoindreServerButton = document.getElementById("rejoindre-sever-btn");
 const waitRoomButton = document.getElementById("wait-room-btn");
 const allezAuSimulateurButton = document.getElementById("allez-au-simulateur-btn");
@@ -160,8 +159,35 @@ document.addEventListener("peer-joined", () => {
   waitRoomButton.classList.remove("hidden");
 });
 
-//duration to controler page
+// duration to controler page
 allezAuSimulateurButton.addEventListener("click", () => {
+  const selectedBtn = document.querySelector("#duration button.selected");
+  const durationError = document.getElementById("duration-error");
+
+  // If no duration is selected, show the paragraph error and stop
+  if (!selectedBtn) {
+    durationError.textContent = "Veuillez choisir une durée avant de commencer.";
+    durationError.classList.remove("hidden");
+    return;
+  }
+
+  // If we reach here, it's successful! Hide the error just in case.
+  durationError.classList.add("hidden");
+
+  // Extract the number (e.g., "duration-45-sec-btn" -> 45)
+  const durationValue = Number(selectedBtn.id.split("-")[1]);
+
+  // Send to server
+  if (appState.currentRoomCode && socket.readyState === WebSocket.OPEN) {
+    socket.send(
+      JSON.stringify({
+        type: "set-duration",
+        roomCode: appState.currentRoomCode,
+        duration: durationValue,
+      })
+    );
+  }
+
   navigateTo(controllerPage, controllerHeading);
 });
 
@@ -271,6 +297,9 @@ const buttons = document.querySelectorAll(
 //loop through all buttons in class duration-button
 buttons.forEach(button => {
   button.addEventListener("click", () => {
+
+    // Hide the error message as soon as they make a selection
+    document.getElementById("duration-error").classList.add("hidden");
 
     //unselectes all buttons
     buttons.forEach(btn => {

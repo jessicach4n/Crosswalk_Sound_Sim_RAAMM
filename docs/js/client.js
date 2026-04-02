@@ -39,12 +39,28 @@ document.addEventListener("sound-playstate", (event) => {
   setButtonState(event.detail.name, event.detail.isPlaying);
 });
 
-function scheduleSound(soundName, startAt) {
-  const sound = sounds[soundName];
+function scheduleSound(baseSoundName, startAt) {
+  let actualSoundName = baseSoundName;
+
+  if (appState.currentDuration) {
+    if (baseSoundName === "canadian") {
+      actualSoundName = `canadian_melody_${appState.currentDuration}`; 
+    } 
+    else if (baseSoundName === "beep") {
+      actualSoundName = `beep_${appState.currentDuration}`;
+    }
+    else if (baseSoundName === "cuckoo") {
+      actualSoundName = `cuckoo_${appState.currentDuration}`;
+    }
+  }
+
+  const sound = sounds[actualSoundName];
+  
   if (!sound) {
-    console.error("Unknown sound:", soundName);
+    console.error(`Audio file not found for: ${actualSoundName}`);
     return;
   }
+  
   sound.schedule(startAt);
 }
 
@@ -102,8 +118,8 @@ function handleSoundButtonClick(soundName) {
   const isPlaying = soundBtnControllers[soundName].playBtn.classList.contains("pause");
 
   if (isPlaying) {
-    broadcastStop(soundName); // Tell the listener to stop this specific sound
-    sounds[soundName].cancel(); // Stop locally
+    broadcastStop("all"); 
+    stopAllAudio();       
   } else {
     requestPlay(soundName);
   }
@@ -140,6 +156,14 @@ document.getElementById("submit-btn").addEventListener("click", () => {
         roomCode,
       }),
     );
+  }
+});
+
+// Hide the error message as soon as the user starts typing a new code
+roomCodeInput.addEventListener("input", () => {
+  const invalidCodeError = document.getElementById("invalid-code-error");
+  if (invalidCodeError) {
+    invalidCodeError.classList.add("hidden");
   }
 });
 
@@ -241,11 +265,11 @@ socket.addEventListener("message", (event) => {
     }
 
   if (message.type === "duration-set") {
-    console.log("Host selected duration:", message.duration);
+    appState.currentDuration = message.duration;
   }
 
   if (message.type === "duration-updated") {
-    console.log("Listener received duration:", message.duration);
+    appState.currentDuration = message.duration;
   }
 
   if (message.type === "prepare-sound") {
@@ -278,11 +302,7 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "stop-sound") {
-    if (message.sound === "all") {
-      stopAllAudio();
-    } else if (sounds[message.sound]) {
-      sounds[message.sound].cancel(); // Dynamically stop the requested sound
-    }
+    stopAllAudio();
   }
 
 if (message.type === "room-closed") {
