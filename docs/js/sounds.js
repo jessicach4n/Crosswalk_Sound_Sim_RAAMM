@@ -1,4 +1,4 @@
-import { SoundEngine } from "./soundEngine.js";
+import { SoundEngine } from "./sound-engine.js";
 
 export const sounds = {
   // --- Mélodie du Canada (Pass "canadian" so the UI knows which button to animate) ---
