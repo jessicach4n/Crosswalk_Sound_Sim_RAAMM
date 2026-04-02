@@ -76,6 +76,11 @@ socket.on("message", (data) => {
       return;
     }
 
+    if (message.type === "pong") {
+      // Ignore pong messages used for heartbeat
+      return;
+    }
+
     if (message.type == "create") {
       if (rooms.size >= 100) {
         socket.send(
@@ -371,4 +376,10 @@ socket.on("message", (data) => {
   });
 });
 
-console.log("WebSocket server is running on ws://localhost:8080");
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ type: "ping" }));
+    }
+  });
+}, 30000); 

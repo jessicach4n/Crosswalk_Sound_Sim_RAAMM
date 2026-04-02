@@ -4,11 +4,9 @@ import { socket, stopAllAudio } from "./client.js";
 //==========DOM elements============
 //buttons
 const startButton = document.getElementById("start-btn");
-const createServerButton = document.getElementById("create-server-btn");
 const rejoindreServerButton = document.getElementById("rejoindre-sever-btn");
 const waitRoomButton = document.getElementById("wait-room-btn");
 const allezAuSimulateurButton = document.getElementById("allez-au-simulateur-btn");
-const sudmitButton = document.getElementById("submit-btn");
 
 //back buttons
 const backToLanding = document.getElementById("back-to-landing");
@@ -54,7 +52,6 @@ const loadingError = document.getElementById("loading-error");
 const retryBtn = document.getElementById("retry-btn");
 
 socket.addEventListener("open", () => {
-  console.log("Frontend: Connected to the server!");
   loadingError.classList.add("hidden");
   retryBtn.classList.add("hidden");
   navigateTo(landingPage, landingHeading);
@@ -95,7 +92,7 @@ function navigateTo(targetPage, targetHeading) {
 
   targetPage.classList.remove("hidden");
   targetPage.inert = false;
-  
+
   currentPage = targetPage;
 
   targetHeading.setAttribute("tabindex", "-1");
@@ -176,6 +173,15 @@ document.addEventListener("navigate-to", (event) => {
         "Vous avez été déconnecté de la salle. Retour à l'accueil.";
     });
     navigateTo(landingPage, landingHeading);
+  }
+  else if (event.detail.page === "home") {
+    // Clear first so it re-triggers if the same message fires twice
+    announcer.textContent = "";
+    requestAnimationFrame(() => {
+      announcer.textContent =
+        "Vous avez été déconnecté de la salle. Retour à l'accueil.";
+    });
+    navigateTo(homePage, homeHeading);
   }
 });
 
