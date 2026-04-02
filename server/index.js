@@ -279,7 +279,7 @@ socket.on("message", (data) => {
       }
 
       const leadMs = 0;
-      const listenerOffsetMs = 550; // Sync offset
+      const listenerOffsetMs = 800; // Sync offset
 
       const now = Date.now();
       const hostStartAt = now + leadMs;
