@@ -1,5 +1,5 @@
 import { appState } from "./appState.js";
-import { sounds } from "./sounds.js";
+import { sounds, unlockAllAudio } from "./sounds.js";
 
 if (location.hostname !== "localhost") {
   console.log = function () {}; // Disables all console.logs on the live site
@@ -119,12 +119,16 @@ soundBtnControllers.beep.playBtn.addEventListener("click", () => handleSoundButt
 soundBtnControllers.cuckoo.playBtn.addEventListener("click", () => handleSoundButtonClick("cuckoo"));
 
 document.getElementById("create-server-btn").addEventListener("click", () => {
+  unlockAllAudio(); 
+
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type: "create" }));
   }
 });
 
 document.getElementById("submit-btn").addEventListener("click", () => {
+  unlockAllAudio();
+  
   const roomCode = roomCodeInput.value.trim();
   let invalidCodeError = document.getElementById("invalid-code-error");
 

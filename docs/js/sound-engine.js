@@ -13,6 +13,15 @@ export class SoundEngine {
     });
   }
 
+  unlock() {
+    this.#audio.play().then(() => {
+      this.#audio.pause();
+      this.#audio.currentTime = 0;
+    }).catch((err) => {
+      console.log(`Unlock failed for ${this.#name}, user might need to click again`, err);
+    });
+  }
+
   schedule(startAt) {
     this.cancel();
 
