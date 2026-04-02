@@ -21,7 +21,7 @@ const rooms = new Map();
 
 function generateRoomCode() {
   const charsAlpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const charsNum = "123456789";
+  const charsNum = "23456789";
   let code;
 
 
@@ -347,26 +347,29 @@ socket.on("message", (data) => {
       });
     }
     else if (message.type === "leave-room") {
-      const roomCode = socket.roomCode;
+      const roomCode = message.roomCode || socket.roomCode;
+
       if (!roomCode) return;
 
       const room = rooms.get(roomCode);
       if (!room) return;
 
-      room.members.forEach((member) => {
-        if (member !== socket && member.readyState === WebSocket.OPEN) {
-          member.send(JSON.stringify({ type: "room-closed" }));
-        }
-      });
-
-      room.members.forEach((member) => {
-        member.roomCode = null;
-      });
-      rooms.delete(roomCode);
-      console.log(`Room ${roomCode} closed by host`);
-    }
-    else {
-        socket.send(JSON.stringify({ type: 'error', message: 'Invalid action' }));
+      if (room.host === socket) {
+        // SCENARIO A: The Host is leaving. Destroy the room.
+        room.members.forEach((member) => {
+          if (member !== socket && member.readyState === WebSocket.OPEN) {
+            member.send(JSON.stringify({ type: "room-closed" }));
+            member.roomCode = null;
+          }
+        });
+        rooms.delete(roomCode);
+        console.log(`Room ${roomCode} closed by host`);
+      } else {
+        // SCENARIO B: The Listener is leaving. Keep the room open.
+        room.members = room.members.filter((member) => member !== socket);
+        socket.roomCode = null;
+        console.log(`Listener left room ${roomCode}. Spot is now open.`);
+      }
     }
   });
 
@@ -379,18 +382,21 @@ socket.on("message", (data) => {
     const room = rooms.get(roomCode);
     if (!room) return;
 
-    // Notify all remaining members the room is closing
-    room.members.forEach((member) => {
-      if (member !== socket && member.readyState === WebSocket.OPEN) {
-        member.send(JSON.stringify({ type: "room-closed" }));
-      }
-    });
-
-    room.members.forEach((member) => {
-        member.roomCode = null;
+    if (room.host === socket) {
+      // SCENARIO A: Host disconnected. Destroy the room.
+      room.members.forEach((member) => {
+        if (member !== socket && member.readyState === WebSocket.OPEN) {
+          member.send(JSON.stringify({ type: "room-closed" }));
+          member.roomCode = null;
+        }
       });
       rooms.delete(roomCode);
-      console.log(`Room ${roomCode} deleted`);
+      console.log(`Room ${roomCode} deleted due to host disconnect`);
+    } else {
+      // SCENARIO B: Listener disconnected. Keep the room open.
+      room.members = room.members.filter((member) => member !== socket);
+      console.log(`Listener disconnected from room ${roomCode}. Spot is open.`);
+    }
   });
 });
 

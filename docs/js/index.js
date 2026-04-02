@@ -238,8 +238,23 @@ backToDuration.addEventListener("click", () => {
   navigateTo(durationPage, durationHeading);
 });
 
-//back to joining room page
+//back to joining room page (Listener leaves)
 backToJoiningRoom.addEventListener("click", () => {
+  // Tell the server to open up the spot!
+  if (appState.currentRoomCode && socket.readyState === WebSocket.OPEN) {
+    socket.send(
+      JSON.stringify({
+        type: "leave-room",
+        roomCode: appState.currentRoomCode,
+      })
+    );
+  }
+  
+  // Clear the listener's memory
+  appState.currentRoomCode = null;
+  appState.currentRole = null;
+
+  // Navigate back
   navigateTo(joiningRoomPage, joiningRoomHeading);
 });
 
