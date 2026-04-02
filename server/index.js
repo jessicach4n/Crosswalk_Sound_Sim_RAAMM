@@ -24,7 +24,6 @@ function generateRoomCode() {
   const charsNum = "123456789";
   let code;
 
-
   do {
     const firstLetter = charsAlpha[crypto.randomInt(0, charsAlpha.length)];
 
@@ -63,7 +62,7 @@ socket.on("message", (data) => {
       return;
     }
 
-    const VALID_SOUNDS = ["canadian", "beep", "cuckoo"];
+    const VALID_SOUNDS = ["canadian", "beep", "cuckoo", "all"];
     const ROOM_CODE_REGEX = /^[A-Z2-9]{6}$/;
 
     // Validate roomCode if present
