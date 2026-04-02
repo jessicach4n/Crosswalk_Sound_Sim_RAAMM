@@ -148,6 +148,25 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   }
 });
 
+function displayInactivityOverlay() {
+  const overlay = document.getElementById("inactivity-overlay");
+  const reloadBtn = document.getElementById("inactivity-reload-btn");
+  const mainContent = document.getElementById("main-app-content");
+
+  if (overlay) {
+    overlay.classList.remove("hidden"); // Reveal the overlay
+    
+    if (mainContent) {
+      mainContent.setAttribute("inert", ""); 
+      mainContent.setAttribute("aria-hidden", "true"); 
+    }
+
+    if (reloadBtn) {
+      reloadBtn.focus();
+    }
+  }
+}
+
 socket.addEventListener("message", (event) => {
   let message;
   try {
@@ -165,14 +184,36 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "error") {
-    if (message.message === "You already have a room") {
+    const errorMsg = message.message;
+
+    // 1. Handle Room Inactivity
+    if (errorMsg === "Room closed due to inactivity") {
+      displayInactivityOverlay(); 
+      return;
+    }
+
+    // 2. Handle Duplicate Room Creation
+    if (errorMsg === "You already have a room") {
       document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "home" } }));
       return;
     }
-    if (message.message.includes("Room not found") || message.message.includes("Invalid room code")) {
-      document.getElementById("invalid-code-error").textContent = "Le code soumis est invalide.";
-      document.getElementById("invalid-code-error").classList.remove("hidden");
+
+    // 3. Handle Invalid/Missing Rooms
+    if (errorMsg.includes("not found") || errorMsg.includes("Invalid room code")) {
+      const errorElement = document.getElementById("invalid-code-error");
+      errorElement.textContent = "Le code soumis est invalide ou la salle n'existe plus.";
+      errorElement.classList.remove("hidden");
+      return;
     }
+
+    // 4. Handle Full Rooms
+    if (errorMsg === "Room is full") {
+      const errorElement = document.getElementById("invalid-code-error");
+      errorElement.textContent = "Cette salle est déjà complète.";
+      errorElement.classList.remove("hidden");
+      return;
+    }
+
     return;
   }
 

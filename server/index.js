@@ -3,7 +3,8 @@ const crypto = require("crypto");
 
 const ALLOWED_ORIGINS = [
   "https://jessicach4n.github.io", 
-  "http://localhost:5500"
+  "http://localhost:5500",
+  "http://localhost:5501"
 ];
 
 const PORT = process.env.PORT || 8080;
@@ -19,13 +20,20 @@ const wss = new WebSocket.Server({
 const rooms = new Map();
 
 function generateRoomCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const charsAlpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const charsNum = "123456789";
   let code;
 
+
   do {
-    code = Array.from({ length: 6 }, () => {
-      return chars[crypto.randomInt(0, chars.length)];
+    const firstLetter = charsAlpha[crypto.randomInt(0, charsAlpha.length)];
+
+    const numbers = Array.from({ length: 5 }, () => {
+      return charsNum[crypto.randomInt(0, charsNum.length)];
     }).join("");
+
+    code = `${firstLetter}${numbers}`;
+
   } while (rooms.has(code));
 
   return code;
@@ -110,6 +118,7 @@ socket.on("message", (data) => {
         host: socket,
         members: [socket],
         duration: null,
+        lastActive: Date.now(),
       });
 
       socket.roomCode = roomCode;
@@ -225,6 +234,10 @@ socket.on("message", (data) => {
     }
     else if (message.type === "prepare-sound") {
       const room = rooms.get(message.roomCode);
+
+      if (room) {
+        room.lastActive = Date.now();
+      }
 
       if (!room) {
         socket.send(JSON.stringify({ type: "error", message: "Room not found" }));
@@ -381,6 +394,34 @@ socket.on("message", (data) => {
   });
 });
 
+const CLEANUP_INTERVAL = 60000; // Check every 60 seconds
+const MAX_IDLE_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+// Periodic cleanup of inactive rooms
+setInterval(() => {
+  const now = Date.now();
+  
+  for (const [code, room] of rooms.entries()) {
+    if (now - room.lastActive > MAX_IDLE_TIME) {
+      console.log(`Cleanup: Room ${code} closed due to inactivity.`);
+      
+      // Notify any remaining members
+      room.members.forEach((member) => {
+        if (member.readyState === WebSocket.OPEN) {
+          member.send(JSON.stringify({ 
+            type: "error", 
+            message: "Room closed due to inactivity" 
+          }));
+          member.roomCode = null;
+        }
+      });
+      
+      rooms.delete(code); // Remove from memory
+    }
+  }
+}, CLEANUP_INTERVAL);
+
+// Heartbeat mechanism to keep connections alive 
 setInterval(() => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
@@ -388,3 +429,5 @@ setInterval(() => {
     }
   });
 }, 30000); 
+
+
