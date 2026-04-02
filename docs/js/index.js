@@ -4,12 +4,15 @@ import { socket, stopAllAudio } from "./client.js";
 //==========DOM elements============
 //buttons
 const startButton = document.getElementById("start-btn");
+const instructionButton = document.getElementById("instruction-btn");
+const createServerButton = document.getElementById("create-server-btn");
 const rejoindreServerButton = document.getElementById("rejoindre-sever-btn");
 const waitRoomButton = document.getElementById("wait-room-btn");
 const allezAuSimulateurButton = document.getElementById("allez-au-simulateur-btn");
 
 //back buttons
-const backToLanding = document.getElementById("back-to-landing");
+const backToLanding1 = document.getElementById("back-to-landing-1");
+const backToLanding2 = document.getElementById("back-to-landing-2");
 const backToHome = document.getElementById("back-to-home");
 const backToWaitingRoom = document.getElementById("back-to-waiting-room");
 const backToDuration = document.getElementById("back-to-duration");
@@ -19,6 +22,10 @@ const backToJoiningRoom = document.getElementById("back-to-joining-room");
 //landing page
 const landingPage = document.getElementById("landing");
 const landingHeading = document.getElementById("landing-heading");
+
+//instruction page
+const instructionPage = document.getElementById("instruction");
+const instructionHeading = document.getElementById("instruction-heading");
 
 //home page
 const homePage = document.getElementById("home");
@@ -121,6 +128,8 @@ function navigateTo(targetPage, targetHeading) {
     case listenerPage:
       documentTitle.textContent = "Écouteur - Simulateur de feux sonores - RAAMM";
       break;
+    case instructionPage:
+      documentTitle.textContent ="Mode d'emploi - Simulateur de feux sonores - RAAMM"
     default:
       documentTitle.textContent = "Simulateur de feux sonores - RAAMM";
   }
@@ -130,6 +139,11 @@ function navigateTo(targetPage, targetHeading) {
 // landing to home page
 startButton.addEventListener("click", () => {
   navigateTo(homePage, homeHeading);
+});
+
+//home to instruction page
+instructionButton.addEventListener("click", () => {
+  navigateTo(instructionPage, instructionHeading);
 });
 
 document.addEventListener("room-created", (event) => {
@@ -188,9 +202,15 @@ document.addEventListener("navigate-to", (event) => {
 //===========BACK BUTTON===============
 
 //back to landing
-backToLanding.addEventListener("click", () => {
+backToLanding1.addEventListener("click", () => {
   navigateTo(landingPage, landingHeading);
 });
+
+//back to landing
+backToLanding2.addEventListener("click", () => {
+  navigateTo(landingPage, landingHeading);
+});
+
 // back to home page
 backToHome.addEventListener("click", () => {
   if (
@@ -241,10 +261,14 @@ buttons.forEach(button => {
     buttons.forEach(btn => {
       btn.classList.remove("selected");
       btn.classList.add("unselected");
+      btn.setAttribute("aria-pressed", "false"); 
+
     });
 
     //selected button that was clicked
     button.classList.remove("unselected");
     button.classList.add("selected");
+    button.setAttribute("aria-pressed", "true"); 
+
   });
 });
