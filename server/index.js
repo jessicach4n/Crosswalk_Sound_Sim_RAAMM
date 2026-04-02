@@ -1,7 +1,11 @@
 const WebSocket = require("ws");
 const crypto = require("crypto");
 
-const ALLOWED_ORIGINS = ["https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM", "http://localhost:5500"];
+const ALLOWED_ORIGINS = [
+  "https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM", // No slash
+  "https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM/", // Trailing slash
+  "http://localhost:5500"
+];
 
 const PORT = process.env.PORT || 8080;
 

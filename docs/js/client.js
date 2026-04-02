@@ -8,7 +8,7 @@ if (location.hostname !== "localhost") {
 const WS_URL =
   location.hostname === "localhost"
     ? "ws://localhost:8080"
-    : "https://crosswalk-sound-sim-raamm-server.onrender.com";
+    : "wss://crosswalk-sound-sim-raamm-server.onrender.com";
 
 const socket = new WebSocket(WS_URL);
 
