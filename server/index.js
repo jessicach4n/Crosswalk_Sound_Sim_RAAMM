@@ -2,8 +2,7 @@ const WebSocket = require("ws");
 const crypto = require("crypto");
 
 const ALLOWED_ORIGINS = [
-  "https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM", // No slash
-  "https://jessicach4n.github.io/Crosswalk_Sound_Sim_RAAMM/", // Trailing slash
+  "https://jessicach4n.github.io", 
   "http://localhost:5500"
 ];
 
@@ -12,7 +11,8 @@ const PORT = process.env.PORT || 8080;
 const wss = new WebSocket.Server({
   port: PORT,
   verifyClient: ({ origin }) => {
-    return true; // Allow all origins for testing; replace with proper check in production
+    if (!origin) return false;
+    return ALLOWED_ORIGINS.includes(origin);
   },
 });
 
