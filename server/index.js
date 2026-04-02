@@ -3,7 +3,8 @@ const crypto = require("crypto");
 
 const ALLOWED_ORIGINS = [
   "https://jessicach4n.github.io", 
-  "http://localhost:5500"
+  "http://localhost:5500",
+  "http://localhost:5501"
 ];
 
 const PORT = process.env.PORT || 8080;
@@ -19,13 +20,20 @@ const wss = new WebSocket.Server({
 const rooms = new Map();
 
 function generateRoomCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const charsAlpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const charsNum = "123456789";
   let code;
 
+
   do {
-    code = Array.from({ length: 6 }, () => {
-      return chars[crypto.randomInt(0, chars.length)];
+    const firstLetter = charsAlpha[crypto.randomInt(0, charsAlpha.length)];
+
+    const numbers = Array.from({ length: 5 }, () => {
+      return charsNum[crypto.randomInt(0, charsNum.length)];
     }).join("");
+
+    code = `${firstLetter}${numbers}`;
+
   } while (rooms.has(code));
 
   return code;
