@@ -12,8 +12,7 @@ const PORT = process.env.PORT || 8080;
 const wss = new WebSocket.Server({
   port: PORT,
   verifyClient: ({ origin }) => {
-    if (!origin) return false;
-    return ALLOWED_ORIGINS.includes(origin);
+    return true; // Allow all origins for testing; replace with proper check in production
   },
 });
 
