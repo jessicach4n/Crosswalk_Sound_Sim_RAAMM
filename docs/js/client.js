@@ -1,27 +1,30 @@
-const socket = new WebSocket("ws://localhost:8080");
+import { appState } from "./appState.js";
+import { sounds, unlockAllAudio } from "./sounds.js";
+
+if (location.hostname !== "localhost") {
+  console.log = function () {}; // Disables all console.logs on the live site
+}
+
+const WS_URL =
+  location.hostname === "localhost"
+    ? "ws://localhost:8080"
+    : "wss://crosswalk-sound-sim-raamm-server.onrender.com";
+
+const socket = new WebSocket(WS_URL);
 
 //=============DOM elements=================
 const roomCodeContainer = document.getElementById("room-code");
 const roomCodeInput = document.getElementById("server-input");
 
 // ============= Audio =============
-const soundControllers = {
-  canadian: {
-    audio: new Audio("audio/canadian_melody.wav"),
-    playBtn: document.getElementById("melody-du-canada-play-btn"),
-  },
-  beep: {
-    audio: new Audio("audio/beep_beep.wav"),
-    playBtn: document.getElementById("beep-beep-play-btn"),
-  },
-  cuckoo: {
-    audio: new Audio("audio/cuckoo.wav"),
-    playBtn: document.getElementById("cuckoo-play-btn"),
-  },
+const soundBtnControllers = {
+  canadian: { playBtn: document.getElementById("melody-du-canada-play-btn") },
+  beep: { playBtn: document.getElementById("beep-beep-play-btn") },
+  cuckoo: { playBtn: document.getElementById("cuckoo-play-btn") },
 };
 
 function setButtonState(soundName, isPlaying) {
-  const controller = soundControllers[soundName];
+  const controller = soundBtnControllers[soundName];
   if (!controller) return;
 
   controller.playBtn.innerHTML = isPlaying
@@ -32,102 +35,66 @@ function setButtonState(soundName, isPlaying) {
   controller.playBtn.classList.toggle("play", !isPlaying);
 }
 
-let currentSound = null;
+document.addEventListener("sound-playstate", (event) => {
+  setButtonState(event.detail.name, event.detail.isPlaying);
+});
 
 function scheduleSound(soundName, startAt) {
-  if (soundName === "canadian") {
-    scheduleCanadianMelody(startAt);
-    return;
-  }
-
-  const controller = soundControllers[soundName];
-  if (!controller) {
+  const sound = sounds[soundName];
+  if (!sound) {
     console.error("Unknown sound:", soundName);
     return;
   }
-
-  const { audio } = controller;
-  const delay = startAt - Date.now();
-
-  const playAudio = async () => {
-    try {
-      audio.pause();
-      audio.currentTime = 0;
-      await audio.play();
-      console.log(`Playing ${soundName}`);
-    } catch (err) {
-      console.error("Audio play failed:", err);
-    }
-  };
-
-  if (delay <= 0) {
-    playAudio();
-  } else {
-    setTimeout(playAudio, delay);
-  }
+  sound.schedule(startAt);
 }
 
-Object.entries(soundControllers).forEach(([soundName, controller]) => {
-  controller.audio.addEventListener("ended", () => {
-    if (currentSound === soundName) {
-      currentSound = null;
-    }
-    setButtonState(soundName, false);
-  });
-});
+let isThrottled = false;
 
 function requestPlay(soundName) {
-  console.log("resquest play")
-  if (window.appState.currentRole !== "host") return;
-    console.log("is host")
+  if (isThrottled || appState.currentRole !== "host" || !appState.currentRoomCode || socket.readyState !== WebSocket.OPEN) return;
 
-  if (!window.appState.currentRoomCode) return;
-    console.log("has room code")
-
-  if (socket.readyState !== WebSocket.OPEN) return;
-    console.log("websocket ready")
+  isThrottled = true;
+  setTimeout(() => { isThrottled = false; }, 500);
 
   socket.send(
     JSON.stringify({
       type: "prepare-sound",
-      roomCode: window.appState.currentRoomCode,
+      roomCode: appState.currentRoomCode,
       sound: soundName,
     }),
   );
 }
 
 function stopAllAudio() {
-  cancelCanadianMelody();
-  Object.values(soundControllers).forEach(({ audio }) => {
-    audio.pause();
-    audio.currentTime = 0;
-  });
-  Object.keys(soundControllers).forEach((name) => setButtonState(name, false));
+  Object.values(sounds).forEach((sound) => sound.cancel());
+  Object.keys(soundBtnControllers).forEach((name) => setButtonState(name, false));
 }
 
-function broadcastStop() {
+function broadcastStop(soundName) {
   if (
-    window.appState.currentRole === "host" &&
-    window.appState.currentRoomCode &&
+    appState.currentRole === "host" &&
+    appState.currentRoomCode &&
     socket.readyState === WebSocket.OPEN
   ) {
     socket.send(
       JSON.stringify({
         type: "stop-sound",
-        roomCode: window.appState.currentRoomCode,
-        sound: "canadian",
+        roomCode: appState.currentRoomCode,
+        sound: soundName || "all",
       }),
     );
   }
 }
 
 document.addEventListener("page-leaving", (event) => {
-  broadcastStop();
+  if (event.detail.fromController) {
+    broadcastStop();
+  }
   stopAllAudio();
 
-  if (event.detail.fromController || event.detail.fromListener) {
-    window.appState.currentRoomCode = null;
-    window.appState.currentRole = null;
+  if (event.detail.fromListener) {
+    appState.currentRoomCode = null;
+    appState.currentRole = null;
   }
 });
 
@@ -136,43 +103,36 @@ window.addEventListener("pagehide", () => {
   stopAllAudio();
 });
 
-soundControllers.canadian.playBtn.addEventListener("click", () => {
-  const isPlaying = soundControllers.canadian.playBtn.classList.contains("pause");
+function handleSoundButtonClick(soundName) {
+  const isPlaying = soundBtnControllers[soundName].playBtn.classList.contains("pause");
 
   if (isPlaying) {
-    broadcastStop(); // tell the listener
-    stopAllAudio();  // stop locally
+    broadcastStop(soundName); // Tell the listener to stop this specific sound
+    sounds[soundName].cancel(); // Stop locally
   } else {
-    requestPlay("canadian");
+    requestPlay(soundName);
   }
+}
 
-});
-
-soundControllers.beep.playBtn.addEventListener("click", () => {
-  requestPlay("beep");
-});
-
-soundControllers.cuckoo.playBtn.addEventListener("click", () => {
-  requestPlay("cuckoo");
-});
-
-socket.addEventListener("open", () => {
-  console.log("Frontend: Connected to the server!");
-});
+soundBtnControllers.canadian.playBtn.addEventListener("click", () => handleSoundButtonClick("canadian"));
+soundBtnControllers.beep.playBtn.addEventListener("click", () => handleSoundButtonClick("beep"));
+soundBtnControllers.cuckoo.playBtn.addEventListener("click", () => handleSoundButtonClick("cuckoo"));
 
 document.getElementById("create-server-btn").addEventListener("click", () => {
+  unlockAllAudio(); 
+
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type: "create" }));
-  } else {
-    console.log("Socket not open yet");
   }
 });
 
 document.getElementById("submit-btn").addEventListener("click", () => {
+  unlockAllAudio();
+  
   const roomCode = roomCodeInput.value.trim();
   let invalidCodeError = document.getElementById("invalid-code-error");
 
-  if (!roomCode) {
+  if (!roomCode || roomCode.length > 6) {
     invalidCodeError.textContent = "Veillez entrer un code valide.";
     invalidCodeError.classList.remove("hidden");
     return;
@@ -185,27 +145,81 @@ document.getElementById("submit-btn").addEventListener("click", () => {
         roomCode,
       }),
     );
-  } else {
-    console.log("Socket not open yet");
   }
 });
 
+function displayInactivityOverlay() {
+  const overlay = document.getElementById("inactivity-overlay");
+  const reloadBtn = document.getElementById("inactivity-reload-btn");
+  const mainContent = document.getElementById("main-app-content");
+
+  if (overlay) {
+    overlay.classList.remove("hidden"); // Reveal the overlay
+    
+    if (mainContent) {
+      mainContent.setAttribute("inert", ""); 
+      mainContent.setAttribute("aria-hidden", "true"); 
+    }
+
+    if (reloadBtn) {
+      reloadBtn.focus();
+    }
+  }
+}
+
 socket.addEventListener("message", (event) => {
-  const message = JSON.parse(event.data);
-  console.log(message);
+  let message;
+  try {
+    message = JSON.parse(event.data);
+  } catch {
+    console.error("Received invalid JSON from server");
+    return;
+  }
+
+  if (message.type === "ping") {
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: "pong" }));
+    }
+    return; 
+  }
 
   if (message.type === "error") {
-    console.log("Server error:", message.message);
-    if (message.message.includes("Room not found")) {
-      document.getElementById("invalid-code-error").textContent = "Le code soumis est invalide.";
-      document.getElementById("invalid-code-error").classList.remove("hidden");
+    const errorMsg = message.message;
+
+    // 1. Handle Room Inactivity
+    if (errorMsg === "Room closed due to inactivity") {
+      displayInactivityOverlay(); 
+      return;
     }
+
+    // 2. Handle Duplicate Room Creation
+    if (errorMsg === "You already have a room") {
+      document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "home" } }));
+      return;
+    }
+
+    // 3. Handle Invalid/Missing Rooms
+    if (errorMsg.includes("not found") || errorMsg.includes("Invalid room code")) {
+      const errorElement = document.getElementById("invalid-code-error");
+      errorElement.textContent = "Le code soumis est invalide ou la salle n'existe plus.";
+      errorElement.classList.remove("hidden");
+      return;
+    }
+
+    // 4. Handle Full Rooms
+    if (errorMsg === "Room is full") {
+      const errorElement = document.getElementById("invalid-code-error");
+      errorElement.textContent = "Cette salle est déjà complète.";
+      errorElement.classList.remove("hidden");
+      return;
+    }
+
     return;
   }
 
   if (message.type === "room-created") {
-    window.appState.currentRoomCode = message.roomCode;
-    window.appState.currentRole = "host";
+    appState.currentRoomCode = message.roomCode;
+    appState.currentRole = "host";
 
     roomCodeContainer.textContent = message.roomCode;
 
@@ -221,8 +235,8 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "room-joined") {
-      window.appState.currentRoomCode = message.roomCode;
-      window.appState.currentRole = "listener";
+      appState.currentRoomCode = message.roomCode;
+      appState.currentRole = "listener";
 
       document.dispatchEvent(
         new CustomEvent("room-joined", {
@@ -240,12 +254,12 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "prepare-sound") {
-    if (window.appState.currentRole === "listener") {
+    if (appState.currentRole === "listener") {
       // Listener is now primed and waiting — notify host
       socket.send(
         JSON.stringify({
           type: "listener-ready",
-          roomCode: window.appState.currentRoomCode,
+          roomCode: appState.currentRoomCode,
           sound: message.sound,
         }),
       );
@@ -258,7 +272,7 @@ socket.addEventListener("message", (event) => {
     socket.send(
       JSON.stringify({
         type: "play-sound",
-        roomCode: window.appState.currentRoomCode,
+        roomCode: appState.currentRoomCode,
         sound: message.sound,
       }),
     );
@@ -269,19 +283,19 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "stop-sound") {
-    if (message.sound === "canadian") {
-      cancelCanadianMelody();
+    if (message.sound === "all") {
+      stopAllAudio();
+    } else if (sounds[message.sound]) {
+      sounds[message.sound].cancel(); // Dynamically stop the requested sound
     }
   }
 
-  if (message.type === "room-closed") {
-    cancelCanadianMelody();
-    window.appState.currentRoomCode = null;
-    window.appState.currentRole = null;
-    document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "home" } }));
-  }
+if (message.type === "room-closed") {
+  stopAllAudio();
+  appState.currentRoomCode = null;
+  appState.currentRole = null;
+  document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "landing" } }));
+}
 });
 
-
-
-
+	export { socket, stopAllAudio, scheduleSound, appState };

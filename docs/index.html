@@ -11,21 +11,42 @@
 
   <link rel="stylesheet" href="styles/style.css" />
 
-  <script src="js/canadian-melody-engine.js" defer></script>
-  <script src="js/shared.js" defer></script>
-  <script src="js/client.js" defer></script>
-  <script src="js/index.js" defer></script>
+  <script type="module" src="js/client.js"></script>
+  <script type="module" src="js/index.js"></script>
   <title>Simulateur de feux sonores - RAAMM</title>
 </head>
 
 <body class="app-container">
   <div id="announcer" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
 
+  <div id="inactivity-overlay" class="overlay-container hidden" role="alertdialog" aria-modal="true" aria-labelledby="inactivity-title" aria-describedby="inactivity-desc">    
+    <div class="overlay-content">
+      <h2 id="inactivity-title">Session expirée</h2>
+      
+      <p id="inactivity-desc">Cette salle a été fermée en raison de 30 minutes d'inactivité.</p>
+      
+      <button type="button" id="inactivity-reload-btn" class="btn waves-effect waves-light" onclick="location.reload()">
+        Commencer une nouvelle session
+      </button>
+    </div>
+  </div>
 
-  <main class="screen">
-    <section id="loading">
-      <p id="loading-heading">Connexion en cours...</p>
-      <p id="loading-error" class="hidden">
+  <main class="screen" id="main-app-content">
+    <section id="loading" aria-labelledby="loading-heading">
+      <h1
+        id="loading-heading"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        Connexion en cours...
+      </h1>
+      <p
+        id="loading-error"
+        class="hidden"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
         Impossible de se connecter au serveur. Veuillez réessayer.
       </p>
       <button id="retry-btn" class="hidden">Réessayer</button>
@@ -78,7 +99,7 @@
         <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
       </button>
 
-      <div class="center_content">
+      <div class="center-content">
         <h1 id="waiting-room-heading">Votre numero de serveur est:</h1>
         <p id="room-code" class="room-code" lang="fr"></p>
         <p>
@@ -163,7 +184,7 @@
         aria-label="Retour à la page de connexion au serveur">
         <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
       </button>
-      <div class="center_content">
+      <div class="center-content">
         <p aria-live="polite" id="status-server" class="sr-only" lang="fr"></p>
         <h1 id="listener-heading">Vous êtes dans serveur</h1>
         <p id="room-code-listener" class="room-code" role="status" aria-live="polite" aria-labelledby="room-label"

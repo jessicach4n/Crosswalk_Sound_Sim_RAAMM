@@ -1,18 +1,39 @@
 const WebSocket = require("ws");
 const crypto = require("crypto");
 
-const wss = new WebSocket.Server({ port: 8080 });
+const ALLOWED_ORIGINS = [
+  "https://jessicach4n.github.io", 
+  "http://localhost:5500",
+  "http://localhost:5501"
+];
+
+const PORT = process.env.PORT || 8080;
+
+const wss = new WebSocket.Server({
+  port: PORT,
+  verifyClient: ({ origin }) => {
+    if (!origin) return false;
+    return ALLOWED_ORIGINS.includes(origin);
+  },
+});
 
 const rooms = new Map();
 
 function generateRoomCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const charsAlpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const charsNum = "123456789";
   let code;
 
+
   do {
-    code = Array.from({ length: 6 }, () => {
-      return chars[crypto.randomInt(0, chars.length)];
+    const firstLetter = charsAlpha[crypto.randomInt(0, charsAlpha.length)];
+
+    const numbers = Array.from({ length: 5 }, () => {
+      return charsNum[crypto.randomInt(0, charsNum.length)];
     }).join("");
+
+    code = `${firstLetter}${numbers}`;
+
   } while (rooms.has(code));
 
   return code;
@@ -23,26 +44,81 @@ wss.on("connection", (socket) => {
 
   socket.roomCode = null;
 
-  socket.on("message", (data) => {
-    let message;
-
-    try {
-      message = JSON.parse(data.toString());
-    }
-    catch (err) {
+socket.on("message", (data) => {
+    if (data.length > 1024) {
       socket.send(
-        JSON.stringify({type: "error", message: "Invalid JSON: " + err})
+        JSON.stringify({ type: "error", message: "Message too large" })
       );
       return;
     }
 
-    if (message.type == 'create') {
+    let message;
+
+    try {
+      message = JSON.parse(data.toString());
+    } catch (err) {
+      socket.send(
+        JSON.stringify({ type: "error", message: "Invalid message format" })
+      );
+      return;
+    }
+
+    const VALID_SOUNDS = ["canadian", "beep", "cuckoo"];
+    const ROOM_CODE_REGEX = /^[A-Z2-9]{6}$/;
+
+    // Validate roomCode if present
+    if (
+      message.roomCode !== undefined &&
+      (typeof message.roomCode !== "string" ||
+        !ROOM_CODE_REGEX.test(message.roomCode))
+    ) {
+      socket.send(
+        JSON.stringify({ type: "error", message: "Invalid room code" })
+      );
+      return;
+    }
+
+    // Validate sound if present
+    if (
+      message.sound !== undefined &&
+      !VALID_SOUNDS.includes(message.sound)
+    ) {
+      socket.send(
+        JSON.stringify({ type: "error", message: "Invalid sound" })
+      );
+      return;
+    }
+
+    if (message.type === "pong") {
+      // Ignore pong messages used for heartbeat
+      return;
+    }
+
+    if (message.type == "create") {
+      if (rooms.size >= 100) {
+        socket.send(
+          JSON.stringify({ type: "error", message: "Server is full" })
+        );
+        return;
+      }
+
+      if (socket.roomCode) {
+        socket.send(
+          JSON.stringify({
+            type: "error",
+            message: "You already have a room",
+          })
+        );
+        return;
+      }
+
       const roomCode = generateRoomCode();
 
       rooms.set(roomCode, {
         host: socket,
         members: [socket],
         duration: null,
+        lastActive: Date.now(),
       });
 
       socket.roomCode = roomCode;
@@ -100,7 +176,7 @@ wss.on("connection", (socket) => {
       }
     }
     else if (message.type === "set-duration") {
-      const room = room.get(message.roomCode);
+      const room = rooms.get(message.roomCode);
       if (!room) {
         socket.send(
           JSON.stringify({
@@ -159,6 +235,10 @@ wss.on("connection", (socket) => {
     else if (message.type === "prepare-sound") {
       const room = rooms.get(message.roomCode);
 
+      if (room) {
+        room.lastActive = Date.now();
+      }
+
       if (!room) {
         socket.send(JSON.stringify({ type: "error", message: "Room not found" }));
         return;
@@ -212,7 +292,7 @@ wss.on("connection", (socket) => {
       }
 
       const leadMs = 0;
-      const listenerOffsetMs = 550; // Sync offset
+      const listenerOffsetMs = 1000; // Sync offset
 
       const now = Date.now();
       const hostStartAt = now + leadMs;
@@ -266,6 +346,25 @@ wss.on("connection", (socket) => {
         );
       });
     }
+    else if (message.type === "leave-room") {
+      const roomCode = socket.roomCode;
+      if (!roomCode) return;
+
+      const room = rooms.get(roomCode);
+      if (!room) return;
+
+      room.members.forEach((member) => {
+        if (member !== socket && member.readyState === WebSocket.OPEN) {
+          member.send(JSON.stringify({ type: "room-closed" }));
+        }
+      });
+
+      room.members.forEach((member) => {
+        member.roomCode = null;
+      });
+      rooms.delete(roomCode);
+      console.log(`Room ${roomCode} closed by host`);
+    }
     else {
         socket.send(JSON.stringify({ type: 'error', message: 'Invalid action' }));
     }
@@ -287,9 +386,48 @@ wss.on("connection", (socket) => {
       }
     });
 
-    rooms.delete(roomCode);
-    console.log(`Room ${roomCode} deleted`);
+    room.members.forEach((member) => {
+        member.roomCode = null;
+      });
+      rooms.delete(roomCode);
+      console.log(`Room ${roomCode} deleted`);
   });
 });
 
-console.log("WebSocket server is running on ws://localhost:8080");
+const CLEANUP_INTERVAL = 60000; // Check every 60 seconds
+const MAX_IDLE_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+// Periodic cleanup of inactive rooms
+setInterval(() => {
+  const now = Date.now();
+  
+  for (const [code, room] of rooms.entries()) {
+    if (now - room.lastActive > MAX_IDLE_TIME) {
+      console.log(`Cleanup: Room ${code} closed due to inactivity.`);
+      
+      // Notify any remaining members
+      room.members.forEach((member) => {
+        if (member.readyState === WebSocket.OPEN) {
+          member.send(JSON.stringify({ 
+            type: "error", 
+            message: "Room closed due to inactivity" 
+          }));
+          member.roomCode = null;
+        }
+      });
+      
+      rooms.delete(code); // Remove from memory
+    }
+  }
+}, CLEANUP_INTERVAL);
+
+// Heartbeat mechanism to keep connections alive 
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ type: "ping" }));
+    }
+  });
+}, 30000); 
+
+
