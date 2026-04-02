@@ -254,6 +254,7 @@ backToHome.addEventListener("click", () => {
   }
   navigateTo(homePage, homeHeading);
 });
+
 //back to waiting room
 backToWaitingRoom.addEventListener("click", () => {
   navigateTo(waitingRoomPage, waitingRoomHeading);
@@ -261,6 +262,7 @@ backToWaitingRoom.addEventListener("click", () => {
 
 //back to duration page
 backToDuration.addEventListener("click", () => {
+  stopAllAudio();
   navigateTo(durationPage, durationHeading);
 });
 
