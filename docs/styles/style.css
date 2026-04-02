@@ -19,12 +19,10 @@
 }
 
 section {
-    text-align: center;
     max-width: 98%;
-    margin: 20% auto;
+    margin: 20% 28px;
 }
 
-/* Uncomment when pages are done */
 .hidden {
     display: none;
 }
@@ -41,9 +39,8 @@ footer {
 }
 
 h1 {
-    font-size: 28px;
+    font-size: 24px;
     color: #000;
-    text-align: center;
     font-weight: 700;
 }
 
@@ -54,20 +51,23 @@ p {
 }
 
 input {
-    width: 90%;
-    font-size: 14px;
+    width: 100%;
+    font-size: 18px;
     color: #000;
     font-weight: 400;
     border-radius: 77px;
-    border: 3px solid #B3B3B3;
+    border: 3px solid #4a4a4a;
     background: #FFF;
-    margin: 0 auto;
+    margin: 10px auto;
     margin-bottom: 26px;
     display: inline-flex;
-    padding: 9px 92px 9px 22px;
+    padding: 9px 0 9px 22px;
     align-items: center;
 }
 
+.room-code {
+    font-size: 42px;
+}
 
 .back-arrow {
     position: absolute;
@@ -87,7 +87,7 @@ input {
 }
 
 button {
-    width: 90%;
+    width: 100%;
     max-width: 100%;
     margin: 0 auto;
     display: inline-flex;
@@ -109,8 +109,6 @@ button {
     cursor: pointer;
 }
 
-
-
 button.selected {
     background: #005E98;
     color: #FFF;
@@ -122,9 +120,6 @@ button.unselected {
     background: #DBDBDB;
     color: black;
 }
-
-
-
 
 .subcontrollers {
     width: 90%;
@@ -177,4 +172,23 @@ button.unselected {
 .music {
     border: 4px solid #860060;
     background: #BB0086;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.error-message {
+    color: red;
+    font-size: 16px;
+    margin: 5px 0 0 0;
+    font-weight: 600;
 }
