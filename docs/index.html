@@ -19,12 +19,13 @@
 <body class="app-container">
   <div id="announcer" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
 
-  <div id="inactivity-overlay" class="overlay-container hidden" role="alertdialog" aria-modal="true" aria-labelledby="inactivity-title" aria-describedby="inactivity-desc">    
+  <div id="inactivity-overlay" class="overlay-container hidden" role="alertdialog" aria-modal="true"
+    aria-labelledby="inactivity-title" aria-describedby="inactivity-desc">
     <div class="overlay-content">
       <h2 id="inactivity-title">Session expirée</h2>
-      
+
       <p id="inactivity-desc">Cette salle a été fermée en raison de 30 minutes d'inactivité.</p>
-      
+
       <button type="button" id="inactivity-reload-btn" class="btn waves-effect waves-light" onclick="location.reload()">
         Commencer une nouvelle session
       </button>
@@ -33,20 +34,10 @@
 
   <main class="screen" id="main-app-content">
     <section id="loading" aria-labelledby="loading-heading">
-      <h1
-        id="loading-heading"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
+      <h1 id="loading-heading" role="status" aria-live="polite" aria-atomic="true">
         Connexion en cours...
       </h1>
-      <p
-        id="loading-error"
-        class="hidden"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
+      <p id="loading-error" class="hidden" aria-live="assertive" aria-atomic="true">
         Impossible de se connecter au serveur. Veuillez réessayer.
       </p>
       <button id="retry-btn" class="hidden">Réessayer</button>
@@ -55,7 +46,7 @@
     <section id="landing" class="landing-page hidden" aria-labelledby="landing-heading">
       <h1 id="landing-heading">SIMULATION DES FEUX SONORES</h1>
       <p>
-        Choisissez entre les deux prochaines choix.
+        Choisissez entre les deux choix suivants.
       </p>
       <button type="button" id="instruction-btn">Mode d'emploi</button>
       <button type="button" id="start-btn">Commencer</button>
@@ -100,7 +91,7 @@
       </button>
 
       <div class="center-content">
-        <h1 id="waiting-room-heading">Votre numero de serveur est:</h1>
+        <h1 id="waiting-room-heading">Votre numéro de serveur est :</h1>
         <p id="room-code" class="room-code" lang="fr"></p>
         <p>
           Veuillez patienter pendant qu'un autre appareil rejoint votre serveur.
@@ -116,7 +107,7 @@
 
 
       <h1 id="duration-heading">
-        Choisissez entre les 4 different durée du son et allez à l'étape suivante:
+        Choisissez entre les 4 différentes durées du son et allez à l’étape suivante :
       </h1>
       <div class="center-content">
         <button type="button" id="duration-15-sec-btn" class="unselected" aria-pressed="false">15 secondes</button>
@@ -166,8 +157,7 @@
       </button>
       <div class="center-content">
         <h1 id="joining-room-heading">
-          Demandez au créateur du serveur pour le code numérique et
-          entrez-le ci-dessous:
+          Demandez au créateur du serveur le code numérique et entrez-le ci-dessous :
         </h1>
         <label for="server-input" id="server-num-label" class="sr-only">
           Numéro du serveur
@@ -191,14 +181,14 @@
           lang="fr"></p>
 
         <p>
-          Veuillez attendre que le créateur du serveur commence la démonstration
+          Veuillez attendre que le créateur du serveur commence la démonstration.
         </p>
       </div>
     </section>
   </main>
 
   <footer>
-    <img src="assets/logo.png" alt="Logo de la RAAMM" />
+    <img src="assets/logo.png" alt="le logo du RAAMM" />
   </footer>
 </body>
 
