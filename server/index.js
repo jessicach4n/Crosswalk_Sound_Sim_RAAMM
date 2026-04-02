@@ -118,6 +118,7 @@ socket.on("message", (data) => {
         host: socket,
         members: [socket],
         duration: null,
+        lastActive: Date.now(),
       });
 
       socket.roomCode = roomCode;
@@ -233,6 +234,10 @@ socket.on("message", (data) => {
     }
     else if (message.type === "prepare-sound") {
       const room = rooms.get(message.roomCode);
+
+      if (room) {
+        room.lastActive = Date.now();
+      }
 
       if (!room) {
         socket.send(JSON.stringify({ type: "error", message: "Room not found" }));
@@ -389,6 +394,34 @@ socket.on("message", (data) => {
   });
 });
 
+const CLEANUP_INTERVAL = 60000; // Check every 60 seconds
+const MAX_IDLE_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+// Periodic cleanup of inactive rooms
+setInterval(() => {
+  const now = Date.now();
+  
+  for (const [code, room] of rooms.entries()) {
+    if (now - room.lastActive > MAX_IDLE_TIME) {
+      console.log(`Cleanup: Room ${code} closed due to inactivity.`);
+      
+      // Notify any remaining members
+      room.members.forEach((member) => {
+        if (member.readyState === WebSocket.OPEN) {
+          member.send(JSON.stringify({ 
+            type: "error", 
+            message: "Room closed due to inactivity" 
+          }));
+          member.roomCode = null;
+        }
+      });
+      
+      rooms.delete(code); // Remove from memory
+    }
+  }
+}, CLEANUP_INTERVAL);
+
+// Heartbeat mechanism to keep connections alive 
 setInterval(() => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
@@ -396,3 +429,5 @@ setInterval(() => {
     }
   });
 }, 30000); 
+
+
