@@ -1,25 +1,24 @@
-// ============= Canadian Melody =============
 const canadianAudio = new Audio("audio/canadian_melody.wav");
 let canadianTimer = null;
 
-function cancelCanadianMelody() {
+export function cancelCanadianMelody() {
   if (canadianTimer) {
     clearTimeout(canadianTimer);
     canadianTimer = null;
   }
   canadianAudio.pause();
   canadianAudio.currentTime = 0;
-  setButtonState("canadian", false);
+  document.dispatchEvent(new CustomEvent("canadian-playstate", { detail: { isPlaying: false } }));
 }
 
-function scheduleCanadianMelody(startAt) {
+export function scheduleCanadianMelody(startAt) {
   cancelCanadianMelody();
 
   const play = async () => {
     try {
       canadianAudio.currentTime = 0;
       await canadianAudio.play();
-      setButtonState("canadian", true);
+      document.dispatchEvent(new CustomEvent("canadian-playstate", { detail: { isPlaying: true } }));
     } catch (err) {
       console.error("Audio play failed:", err);
     }
@@ -35,5 +34,5 @@ function scheduleCanadianMelody(startAt) {
 
 canadianAudio.addEventListener("ended", () => {
   canadianTimer = null;
-  setButtonState("canadian", false);
+  document.dispatchEvent(new CustomEvent("canadian-playstate", { detail: { isPlaying: false } }));
 });

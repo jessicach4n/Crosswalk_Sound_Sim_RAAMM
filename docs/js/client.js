@@ -1,3 +1,9 @@
+import { appState } from "./appState.js";
+import {
+  cancelCanadianMelody,
+  scheduleCanadianMelody,
+} from "./canadian-melody-engine.js";
+
 const WS_URL =
   location.hostname === "localhost"
     ? "ws://localhost:8080"
@@ -36,6 +42,10 @@ function setButtonState(soundName, isPlaying) {
   controller.playBtn.classList.toggle("pause", isPlaying);
   controller.playBtn.classList.toggle("play", !isPlaying);
 }
+
+document.addEventListener("canadian-playstate", (event) => {
+  setButtonState("canadian", event.detail.isPlaying);
+});
 
 let currentSound = null;
 
@@ -83,10 +93,10 @@ Object.entries(soundControllers).forEach(([soundName, controller]) => {
 
 function requestPlay(soundName) {
   console.log("request play")
-  if (window.appState.currentRole !== "host") return;
+  if (appState.currentRole !== "host") return;
     console.log("is host")
 
-  if (!window.appState.currentRoomCode) return;
+  if (!appState.currentRoomCode) return;
     console.log("has room code")
 
   if (socket.readyState !== WebSocket.OPEN) return;
@@ -95,7 +105,7 @@ function requestPlay(soundName) {
   socket.send(
     JSON.stringify({
       type: "prepare-sound",
-      roomCode: window.appState.currentRoomCode,
+      roomCode: appState.currentRoomCode,
       sound: soundName,
     }),
   );
@@ -112,14 +122,14 @@ function stopAllAudio() {
 
 function broadcastStop() {
   if (
-    window.appState.currentRole === "host" &&
-    window.appState.currentRoomCode &&
+    appState.currentRole === "host" &&
+    appState.currentRoomCode &&
     socket.readyState === WebSocket.OPEN
   ) {
     socket.send(
       JSON.stringify({
         type: "stop-sound",
-        roomCode: window.appState.currentRoomCode,
+        roomCode: appState.currentRoomCode,
         sound: "canadian",
       }),
     );
@@ -133,8 +143,8 @@ document.addEventListener("page-leaving", (event) => {
   stopAllAudio();
 
   if (event.detail.fromListener) {
-    window.appState.currentRoomCode = null;
-    window.appState.currentRole = null;
+    appState.currentRoomCode = null;
+    appState.currentRole = null;
   }
 });
 
@@ -205,7 +215,7 @@ socket.addEventListener("message", (event) => {
     console.error("Received invalid JSON from server");
     return;
   }
-  
+
   console.log(message);
 
   if (message.type === "error") {
@@ -222,8 +232,8 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "room-created") {
-    window.appState.currentRoomCode = message.roomCode;
-    window.appState.currentRole = "host";
+    appState.currentRoomCode = message.roomCode;
+    appState.currentRole = "host";
 
     roomCodeContainer.textContent = message.roomCode;
 
@@ -239,8 +249,8 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "room-joined") {
-      window.appState.currentRoomCode = message.roomCode;
-      window.appState.currentRole = "listener";
+      appState.currentRoomCode = message.roomCode;
+      appState.currentRole = "listener";
 
       document.dispatchEvent(
         new CustomEvent("room-joined", {
@@ -258,12 +268,12 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "prepare-sound") {
-    if (window.appState.currentRole === "listener") {
+    if (appState.currentRole === "listener") {
       // Listener is now primed and waiting — notify host
       socket.send(
         JSON.stringify({
           type: "listener-ready",
-          roomCode: window.appState.currentRoomCode,
+          roomCode: appState.currentRoomCode,
           sound: message.sound,
         }),
       );
@@ -276,7 +286,7 @@ socket.addEventListener("message", (event) => {
     socket.send(
       JSON.stringify({
         type: "play-sound",
-        roomCode: window.appState.currentRoomCode,
+        roomCode: appState.currentRoomCode,
         sound: message.sound,
       }),
     );
@@ -294,12 +304,10 @@ socket.addEventListener("message", (event) => {
 
 if (message.type === "room-closed") {
   cancelCanadianMelody();
-  window.appState.currentRoomCode = null;
-  window.appState.currentRole = null;
+  appState.currentRoomCode = null;
+  appState.currentRole = null;
   document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "landing" } }));
 }
 });
 
-
-
-
+	export { socket, stopAllAudio, scheduleSound, appState };

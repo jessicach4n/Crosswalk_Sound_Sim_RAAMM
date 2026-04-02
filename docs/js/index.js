@@ -1,3 +1,6 @@
+import { appState } from "./appState.js";
+import { socket, stopAllAudio } from "./client.js";
+
 //==========DOM elements============
 //buttons
 const startButton = document.getElementById("start-btn");
@@ -88,7 +91,11 @@ function navigateTo(targetPage, targetHeading) {
   }));
 
   currentPage.classList.add("hidden");
+  currentPage.inert = true;
+
   targetPage.classList.remove("hidden");
+  targetPage.inert = false;
+  
   currentPage = targetPage;
 
   targetHeading.setAttribute("tabindex", "-1");
@@ -181,17 +188,17 @@ backToLanding.addEventListener("click", () => {
 // back to home page
 backToHome.addEventListener("click", () => {
   if (
-    window.appState.currentRoomCode &&
+    appState.currentRoomCode &&
     socket.readyState === WebSocket.OPEN
   ) {
     socket.send(
       JSON.stringify({
         type: "leave-room",
-        roomCode: window.appState.currentRoomCode,
+        roomCode: appState.currentRoomCode,
       })
     );
-    window.appState.currentRoomCode = null;
-    window.appState.currentRole = null;
+    appState.currentRoomCode = null;
+    appState.currentRole = null;
   }
   navigateTo(homePage, homeHeading);
 });

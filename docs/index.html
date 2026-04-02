@@ -7,10 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link rel="stylesheet" href="styles/style.css" />
 
-  <script src="js/canadian-melody-engine.js" defer></script>
-  <script src="js/shared.js" defer></script>
-  <script src="js/client.js" defer></script>
-  <script src="js/index.js" defer></script>
+  <script type="module" src="js/canadian-melody-engine.js"></script>
+  <script type="module" src="js/client.js"></script>
+  <script type="module" src="js/index.js"></script>
   <title>Simulateur de feux sonores - RAAMM</title>
 </head>
 
@@ -18,9 +17,21 @@
   <div id="announcer" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
 
   <main class="screen">
-    <section id="loading">
-      <p id="loading-heading">Connexion en cours...</p>
-      <p id="loading-error" class="hidden">
+    <section id="loading" aria-labelledby="loading-heading">
+      <h1
+        id="loading-heading"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        Connexion en cours...
+      </h1>
+      <p
+        id="loading-error"
+        class="hidden"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
         Impossible de se connecter au serveur. Veuillez réessayer.
       </p>
       <button id="retry-btn" class="hidden">Réessayer</button>
@@ -42,12 +53,7 @@
       <button type="button" id="start-btn">Commencer</button>
     </section>
 
-    <section
-      id="home"
-      class="home-page hidden"
-      aria-labelledby="home-heading"
-      aria-hidden="true"
-    >
+    <section id="home" class="home-page hidden" aria-labelledby="home-heading" inert>
       <button
         type="button"
         id="back-to-landing"
@@ -66,12 +72,7 @@
       </div>
     </section>
 
-    <section
-      id="waiting-room"
-      class="hidden"
-      aria-labelledby="waiting-room-heading"
-      aria-hidden="true"
-    >
+    <section id="waiting-room" class="hidden" aria-labelledby="waiting-room-heading" inert>
       <button
         type="button"
         id="back-to-home"
@@ -98,12 +99,7 @@
       </div>
     </section>
 
-    <section
-      id="duration"
-      class="hidden"
-      aria-labelledby="duration-heading"
-      aria-hidden="true"
-    >
+    <section id="duration" class="hidden" aria-labelledby="duration-heading" inert>
       <button
         type="button"
         id="back-to-waiting-room"
@@ -126,12 +122,7 @@
       </div>
     </section>
 
-    <section
-      id="controller"
-      class="hidden"
-      aria-labelledby="controller-heading"
-      aria-hidden="true"
-    >
+    <section id="controller" class="hidden" aria-labelledby="controller-heading" inert>
       <button
         type="button"
         id="back-to-duration"
@@ -183,12 +174,7 @@
       </div>
     </section>
 
-    <section
-      id="joining-room"
-      class="hidden"
-      aria-labelledby="joining-room-heading"
-      aria-hidden="true"
-    >
+    <section id="joining-room" class="hidden" aria-labelledby="joining-room-heading" inert>
       <button
         type="button"
         id="back-to-home-from-joining-room"
@@ -217,12 +203,8 @@
       </div>
     </section>
 
-    <section
-      id="listener"
-      class="hidden"
-      aria-labelledby="listener-heading"
-      aria-hidden="true"
-    >
+    
+	<section id="listener" class="hidden" aria-labelledby="listener-heading" inert>
       <button
         type="button"
         id="back-to-joining-room"
