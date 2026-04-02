@@ -91,11 +91,6 @@ document.addEventListener("page-leaving", (event) => {
     broadcastStop();
   }
   stopAllAudio();
-
-  if (event.detail.fromListener) {
-    appState.currentRoomCode = null;
-    appState.currentRole = null;
-  }
 });
 
 window.addEventListener("pagehide", () => {
@@ -298,4 +293,4 @@ if (message.type === "room-closed") {
 }
 });
 
-	export { socket, stopAllAudio, scheduleSound, appState };
+export { socket, stopAllAudio, scheduleSound, appState };
