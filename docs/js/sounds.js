@@ -17,3 +17,7 @@ export const sounds = {
   cuckoo_45: new SoundEngine("cuckoo", "audio/cuckoo_45.wav"),
   cuckoo_60: new SoundEngine("cuckoo", "audio/cuckoo_60.wav"),
 };
+
+export function unlockAllAudio() {
+  Object.values(sounds).forEach((sound) => sound.unlock());
+}
