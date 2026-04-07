@@ -117,10 +117,10 @@ window.addEventListener("pagehide", () => {
 function handleSoundButtonClick(soundName) {
   const isPlaying = soundBtnControllers[soundName].playBtn.classList.contains("pause");
 
-  if (isPlaying) {
-    broadcastStop("all"); 
-    stopAllAudio();       
-  } else {
+  stopAllAudio();       
+  broadcastStop("all"); 
+
+  if (!isPlaying) {
     requestPlay(soundName);
   }
 }
