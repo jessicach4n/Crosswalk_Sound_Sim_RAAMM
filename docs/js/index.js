@@ -95,9 +95,11 @@ function navigateTo(targetPage, targetHeading) {
 
   currentPage.classList.add("hidden");
   currentPage.inert = true;
+  currentPage.setAttribute("aria-hidden", "true");
 
   targetPage.classList.remove("hidden");
   targetPage.inert = false;
+  targetPage.removeAttribute("aria-hidden");
 
   currentPage = targetPage;
 
