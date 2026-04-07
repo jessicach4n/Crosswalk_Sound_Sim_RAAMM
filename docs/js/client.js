@@ -305,12 +305,16 @@ socket.addEventListener("message", (event) => {
     stopAllAudio();
   }
 
-if (message.type === "room-closed") {
-  stopAllAudio();
-  appState.currentRoomCode = null;
-  appState.currentRole = null;
-  document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "landing" } }));
-}
+  if (message.type === "room-closed") {
+    stopAllAudio();
+
+
+    if (appState.currentRoomCode) {
+      appState.currentRoomCode = null;
+      appState.currentRole = null;
+      document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "landing" } }));
+    }
+  }
 });
 
 export { socket, stopAllAudio, scheduleSound, appState };

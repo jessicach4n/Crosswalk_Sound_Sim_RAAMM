@@ -146,6 +146,19 @@ instructionButton.addEventListener("click", () => {
 });
 
 document.addEventListener("room-created", (event) => {
+  waitRoomButton.classList.add("hidden");
+  appState.currentDuration = null;
+
+  const durationButtons = document.querySelectorAll(
+    "#duration button:not(#allez-au-simulateur-btn):not(#back-to-waiting-room)"
+  );
+  durationButtons.forEach(btn => {
+    btn.classList.remove("selected");
+    btn.classList.add("unselected");
+    btn.setAttribute("aria-pressed", "false"); 
+  });
+
+  // 4. Finally, navigate to the waiting room
   navigateTo(waitingRoomPage, waitingRoomHeading);
 });
 
