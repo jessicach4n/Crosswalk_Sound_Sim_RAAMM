@@ -196,7 +196,7 @@ socket.on("message", (data) => {
         return;
       }
 
-      const validDurations = [15, 30, 45, 60];
+      const validDurations = [30, 45, 60];
       const duration = Number(message.duration);
 
       if (!validDurations.includes(duration)) {
