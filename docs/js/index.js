@@ -95,9 +95,11 @@ function navigateTo(targetPage, targetHeading) {
 
   currentPage.classList.add("hidden");
   currentPage.inert = true;
+  currentPage.setAttribute("aria-hidden", "true");
 
   targetPage.classList.remove("hidden");
   targetPage.inert = false;
+  targetPage.removeAttribute("aria-hidden");
 
   currentPage = targetPage;
 
@@ -146,6 +148,19 @@ instructionButton.addEventListener("click", () => {
 });
 
 document.addEventListener("room-created", (event) => {
+  waitRoomButton.classList.add("hidden");
+  appState.currentDuration = null;
+
+  const durationButtons = document.querySelectorAll(
+    "#duration button:not(#allez-au-simulateur-btn):not(#back-to-waiting-room)"
+  );
+  durationButtons.forEach(btn => {
+    btn.classList.remove("selected");
+    btn.classList.add("unselected");
+    btn.setAttribute("aria-pressed", "false"); 
+  });
+
+  // 4. Finally, navigate to the waiting room
   navigateTo(waitingRoomPage, waitingRoomHeading);
 });
 
@@ -282,12 +297,19 @@ backToJoiningRoom.addEventListener("click", () => {
   appState.currentRoomCode = null;
   appState.currentRole = null;
 
+  // Clear the input field and hide any lingering errors
+  document.getElementById("server-input").value = "";
+  document.getElementById("invalid-code-error").classList.add("hidden");
+
   // Navigate back
   navigateTo(joiningRoomPage, joiningRoomHeading);
 });
 
 // back to home page from joining room
 backToHomeFromJoiningRoom.addEventListener("click", () => {
+  document.getElementById("server-input").value = "";
+  document.getElementById("invalid-code-error").classList.add("hidden");
+
   navigateTo(homePage, homeHeading);
 });
 

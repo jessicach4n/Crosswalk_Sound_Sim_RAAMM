@@ -291,7 +291,7 @@ socket.on("message", (data) => {
       }
 
       const leadMs = 0;
-      const listenerOffsetMs = 1000; // Sync offset
+      const listenerOffsetMs = (message.sound === "beep") ? 0 : 1000; // Sync offset
 
       const now = Date.now();
       const hostStartAt = now + leadMs;
@@ -348,10 +348,16 @@ socket.on("message", (data) => {
     else if (message.type === "leave-room") {
       const roomCode = message.roomCode || socket.roomCode;
 
-      if (!roomCode) return;
+      if (!roomCode) {
+        socket.roomCode = null;
+        return;
+      }
 
       const room = rooms.get(roomCode);
-      if (!room) return;
+      if (!room) {
+        socket.roomCode = null; 
+        return;
+      }
 
       if (room.host === socket) {
         // SCENARIO A: The Host is leaving. Destroy the room.
@@ -362,7 +368,9 @@ socket.on("message", (data) => {
           }
         });
         rooms.delete(roomCode);
+        socket.roomCode = null;
         console.log(`Room ${roomCode} closed by host`);
+
       } else {
         // SCENARIO B: The Listener is leaving. Keep the room open.
         room.members = room.members.filter((member) => member !== socket);
