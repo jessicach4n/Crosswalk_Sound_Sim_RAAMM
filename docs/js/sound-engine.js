@@ -14,10 +14,15 @@ export class SoundEngine {
   }
 
   unlock() {
+    this.#audio.muted = true;
+
     this.#audio.play().then(() => {
       this.#audio.pause();
       this.#audio.currentTime = 0;
+      
+      this.#audio.muted = false;
     }).catch((err) => {
+      this.#audio.muted = false;
       console.log(`Unlock failed for ${this.#name}, user might need to click again`, err);
     });
   }
