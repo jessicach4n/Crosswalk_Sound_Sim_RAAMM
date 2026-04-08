@@ -138,7 +138,8 @@ function navigateTo(targetPage, targetHeading) {
       documentTitle.textContent = "Écouteur - Simulateur de feux sonores - RAAMM";
       break;
     case instructionPage:
-      documentTitle.textContent ="Mode d'emploi - Simulateur de feux sonores - RAAMM"
+      documentTitle.textContent ="Mode d'emploi - Simulateur de feux sonores - RAAMM";
+      break;
     default:
       documentTitle.textContent = "Simulateur de feux sonores - RAAMM";
   }
