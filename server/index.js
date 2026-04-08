@@ -20,7 +20,7 @@ const wss = new WebSocket.Server({
 const rooms = new Map();
 
 function generateRoomCode() {
-  const charsAlpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const charsAlpha = "ABCDEFGHJKMNPQRSTUVWXYZ";
   const charsNum = "23456789";
   let code;
 
@@ -60,6 +60,10 @@ socket.on("message", (data) => {
         JSON.stringify({ type: "error", message: "Invalid message format" })
       );
       return;
+    }
+
+    if (typeof message.roomCode === "string") {
+      message.roomCode = message.roomCode.toUpperCase();
     }
 
     const VALID_SOUNDS = ["canadian", "beep", "cuckoo", "all"];

@@ -140,7 +140,7 @@ document.getElementById("create-server-btn").addEventListener("click", () => {
 document.getElementById("submit-btn").addEventListener("click", () => {
   unlockAllAudio();
   
-  const roomCode = roomCodeInput.value.trim();
+  const roomCode = roomCodeInput.value.trim().toUpperCase();
   let invalidCodeError = document.getElementById("invalid-code-error");
 
   if (!roomCode || roomCode.length > 6) {
