@@ -15,6 +15,8 @@ const socket = new WebSocket(WS_URL);
 //=============DOM elements=================
 const roomCodeContainer = document.getElementById("room-code");
 const roomCodeInput = document.getElementById("server-input");
+const joinStatus = document.getElementById("join-status");
+const demoStatus = document.getElementById("demo-status");
 
 // ============= Audio =============
 const soundBtnControllers = {
@@ -255,10 +257,13 @@ socket.addEventListener("message", (event) => {
         detail: { roomCode: message.roomCode },
       }),
     );
+
+    joinStatus.textContent = "Veuillez patienter pendant qu'un autre appareil rejoint votre serveur.";
   }
 
   if (message.type === "peer-joined") {
     appState.hasPeer = true;
+    joinStatus.textContent = "Un appareil a rejoint le serveur ! Vous pouvez maintenant choisir une durée.";
     document.dispatchEvent(new Event("peer-joined"));
   }
 
@@ -279,6 +284,10 @@ socket.addEventListener("message", (event) => {
 
   if (message.type === "duration-updated") {
     appState.currentDuration = message.duration;
+
+    if (appState.currentRole === "listener") {
+      demoStatus.textContent = "La durée a été choisie. Le signal sonore va bientôt commencer...";
+    }
   }
 
   if (message.type === "prepare-sound") {
@@ -308,10 +317,18 @@ socket.addEventListener("message", (event) => {
 
   if (message.type === "play-sound") {
     scheduleSound(message.sound, message.startAt);
+
+    if (appState.currentRole === "listener") {
+      demoStatus.textContent = "Démonstration en cours : émission du signal sonore...";
+    }
   }
 
   if (message.type === "stop-sound") {
     stopAllAudio();
+
+    if (appState.currentRole === "listener") {
+      demoStatus.textContent = "Démonstration arrêtée. Veuillez attendre le prochain signal.";
+    }
   }
 
   if (message.type === "room-closed") {
@@ -330,6 +347,8 @@ socket.addEventListener("message", (event) => {
     
     appState.hasPeer = false; 
     stopAllAudio();
+
+    joinStatus.textContent = "Veuillez patienter pendant qu'un autre appareil rejoint votre serveur.";
     
     document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "waiting-room" } }));
   }
