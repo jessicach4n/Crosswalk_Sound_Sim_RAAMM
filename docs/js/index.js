@@ -101,6 +101,14 @@ function navigateTo(targetPage, targetHeading) {
   targetPage.inert = false;
   targetPage.removeAttribute("aria-hidden");
 
+  if (targetPage === waitingRoomPage) {
+    if (appState.hasPeer) {
+      waitRoomButton.classList.remove("hidden");
+    } else {
+      waitRoomButton.classList.add("hidden");
+    }
+  }
+
   currentPage = targetPage;
 
   targetHeading.setAttribute("tabindex", "-1");
@@ -130,7 +138,8 @@ function navigateTo(targetPage, targetHeading) {
       documentTitle.textContent = "Écouteur - Simulateur de feux sonores - RAAMM";
       break;
     case instructionPage:
-      documentTitle.textContent ="Mode d'emploi - Simulateur de feux sonores - RAAMM"
+      documentTitle.textContent ="Mode d'emploi - Simulateur de feux sonores - RAAMM";
+      break;
     default:
       documentTitle.textContent = "Simulateur de feux sonores - RAAMM";
   }
@@ -237,6 +246,15 @@ document.addEventListener("navigate-to", (event) => {
         "Vous avez été déconnecté de la salle. Retour à l'accueil.";
     });
     navigateTo(homePage, homeHeading);
+  }
+  else if (event.detail.page === "waiting-room") {
+    // Clear first so it re-triggers if the same message fires twice
+    announcer.textContent = "";
+    requestAnimationFrame(() => {
+      announcer.textContent =
+        "Votre partenaire a quitté la salle. Retour à la salle d'attente en attendant de trouver un nouveau partenaire.";
+    });
+    navigateTo(waitingRoomPage, waitingRoomHeading);
   }
 });
 

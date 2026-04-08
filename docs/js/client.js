@@ -246,6 +246,7 @@ socket.addEventListener("message", (event) => {
   if (message.type === "room-created") {
     appState.currentRoomCode = message.roomCode;
     appState.currentRole = "host";
+    appState.hasPeer = false;
 
     roomCodeContainer.textContent = message.roomCode;
 
@@ -257,6 +258,7 @@ socket.addEventListener("message", (event) => {
   }
 
   if (message.type === "peer-joined") {
+    appState.hasPeer = true;
     document.dispatchEvent(new Event("peer-joined"));
   }
 
@@ -321,6 +323,15 @@ socket.addEventListener("message", (event) => {
       appState.currentRole = null;
       document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "landing" } }));
     }
+  }
+
+  else if (message.type === "peer-left") {
+    console.log("The listener left the room. Waiting for a new connection...");
+    
+    appState.hasPeer = false; 
+    stopAllAudio();
+    
+    document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "waiting-room" } }));
   }
 });
 
