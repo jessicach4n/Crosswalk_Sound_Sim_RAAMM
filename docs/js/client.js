@@ -33,6 +33,13 @@ function setButtonState(soundName, isPlaying) {
 
   controller.playBtn.classList.toggle("pause", isPlaying);
   controller.playBtn.classList.toggle("play", !isPlaying);
+
+  controller.playBtn.setAttribute(
+    "aria-label",
+    isPlaying
+      ? "Mettre en pause la mélodie"
+      : "Jouer la mélodie"
+  );
 }
 
 document.addEventListener("sound-playstate", (event) => {
