@@ -380,6 +380,10 @@ socket.on("message", (data) => {
         room.members = room.members.filter((member) => member !== socket);
         socket.roomCode = null;
         console.log(`Listener left room ${roomCode}. Spot is now open.`);
+
+        if (room.host && room.host.readyState === WebSocket.OPEN) {
+          room.host.send(JSON.stringify({ type: "peer-left" }));
+        }
       }
     }
   });
@@ -396,10 +400,10 @@ socket.on("message", (data) => {
     if (room.host === socket) {
       // SCENARIO A: Host disconnected. Destroy the room.
       room.members.forEach((member) => {
-        if (member !== socket && member.readyState === WebSocket.OPEN) {
+        if (member.readyState === WebSocket.OPEN) {
           member.send(JSON.stringify({ type: "room-closed" }));
-          member.roomCode = null;
         }
+        member.roomCode = null;
       });
       rooms.delete(roomCode);
       console.log(`Room ${roomCode} deleted due to host disconnect`);
@@ -407,6 +411,10 @@ socket.on("message", (data) => {
       // SCENARIO B: Listener disconnected. Keep the room open.
       room.members = room.members.filter((member) => member !== socket);
       console.log(`Listener disconnected from room ${roomCode}. Spot is open.`);
+
+      if (room.host && room.host.readyState === WebSocket.OPEN) {
+          room.host.send(JSON.stringify({ type: "peer-left" }));
+      }
     }
   });
 });
