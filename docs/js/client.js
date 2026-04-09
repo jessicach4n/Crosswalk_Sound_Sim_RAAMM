@@ -2,7 +2,7 @@ import { appState } from "./appState.js";
 import { sounds, unlockAllAudio } from "./sounds.js";
 
 if (location.hostname !== "localhost") {
-  console.log = function () {}; // Disables all console.logs on the live site
+  console.log = function () {}; // disables console.logs on the live site
 }
 
 const WS_URL =
@@ -168,7 +168,6 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   }
 });
 
-// Hide the error message as soon as the user starts typing a new code
 roomCodeInput.addEventListener("input", () => {
   const invalidCodeError = document.getElementById("invalid-code-error");
   if (invalidCodeError) {
@@ -182,7 +181,7 @@ function displayInactivityOverlay() {
   const mainContent = document.getElementById("main-app-content");
 
   if (overlay) {
-    overlay.classList.remove("hidden"); // Reveal the overlay
+    overlay.classList.remove("hidden"); 
     
     if (mainContent) {
       mainContent.setAttribute("inert", ""); 
@@ -214,19 +213,16 @@ socket.addEventListener("message", (event) => {
   if (message.type === "error") {
     const errorMsg = message.message;
 
-    // 1. Handle Room Inactivity
     if (errorMsg === "Room closed due to inactivity") {
       displayInactivityOverlay(); 
       return;
     }
 
-    // 2. Handle Duplicate Room Creation
     if (errorMsg === "You already have a room") {
       document.dispatchEvent(new CustomEvent("navigate-to", { detail: { page: "home" } }));
       return;
     }
 
-    // 3. Handle Invalid/Missing Rooms
     if (errorMsg.includes("not found") || errorMsg.includes("Invalid room code")) {
       const errorElement = document.getElementById("invalid-code-error");
       errorElement.textContent = "Le code soumis est invalide ou la salle n'existe plus.";
@@ -234,7 +230,6 @@ socket.addEventListener("message", (event) => {
       return;
     }
 
-    // 4. Handle Full Rooms
     if (errorMsg === "Room is full") {
       const errorElement = document.getElementById("invalid-code-error");
       errorElement.textContent = "Cette salle est déjà complète.";
@@ -292,7 +287,6 @@ socket.addEventListener("message", (event) => {
 
   if (message.type === "prepare-sound") {
     if (appState.currentRole === "listener") {
-      // Listener is now primed and waiting — notify host
       socket.send(
         JSON.stringify({
           type: "listener-ready",
@@ -301,11 +295,9 @@ socket.addEventListener("message", (event) => {
         }),
       );
     }
-    // Host receives this too but just waits for listener-ready
   }
 
   if (message.type === "listener-ready") {
-    // Host receives this — both devices are ready, now trigger play
     socket.send(
       JSON.stringify({
         type: "play-sound",

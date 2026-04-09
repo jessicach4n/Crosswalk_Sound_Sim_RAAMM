@@ -85,7 +85,6 @@ let currentPage = loadingPage;
 let documentTitle = document.getElementsByTagName("title")[0];
 
 function navigateTo(targetPage, targetHeading) {
-  // Signal the audio file to stop and broadcast
   document.dispatchEvent(new CustomEvent("page-leaving", {
     detail: {
       fromController: currentPage === controllerPage,
@@ -114,7 +113,6 @@ function navigateTo(targetPage, targetHeading) {
   targetHeading.setAttribute("tabindex", "-1");
   targetHeading.focus();
 
-  // Update the document title based on the target page
   switch (targetPage) {
     case landingPage:
       documentTitle.textContent = "Simulateur de feux sonores - RAAMM";
@@ -169,7 +167,6 @@ document.addEventListener("room-created", (event) => {
     btn.setAttribute("aria-pressed", "false"); 
   });
 
-  // 4. Finally, navigate to the waiting room
   navigateTo(waitingRoomPage, waitingRoomHeading);
 });
 
@@ -188,20 +185,16 @@ allezAuSimulateurButton.addEventListener("click", () => {
   const selectedBtn = document.querySelector("#duration button.selected");
   const durationError = document.getElementById("duration-error");
 
-  // If no duration is selected, show the paragraph error and stop
   if (!selectedBtn) {
     durationError.textContent = "Veuillez choisir une durée avant de commencer.";
     durationError.classList.remove("hidden");
     return;
   }
 
-  // If we reach here, it's successful! Hide the error just in case.
   durationError.classList.add("hidden");
 
-  // Extract the number (e.g., "duration-45-sec-btn" -> 45)
   const durationValue = Number(selectedBtn.id.split("-")[1]);
 
-  // Send to server
   if (appState.currentRoomCode && socket.readyState === WebSocket.OPEN) {
     socket.send(
       JSON.stringify({
@@ -230,7 +223,6 @@ const announcer = document.getElementById("announcer");
 document.addEventListener("navigate-to", (event) => {
   stopAllAudio();
   if (event.detail.page === "landing") {
-    // Clear first so it re-triggers if the same message fires twice
     announcer.textContent = "";
     requestAnimationFrame(() => {
       announcer.textContent =
@@ -239,7 +231,6 @@ document.addEventListener("navigate-to", (event) => {
     navigateTo(landingPage, landingHeading);
   }
   else if (event.detail.page === "home") {
-    // Clear first so it re-triggers if the same message fires twice
     announcer.textContent = "";
     requestAnimationFrame(() => {
       announcer.textContent =
@@ -248,7 +239,6 @@ document.addEventListener("navigate-to", (event) => {
     navigateTo(homePage, homeHeading);
   }
   else if (event.detail.page === "waiting-room") {
-    // Clear first so it re-triggers if the same message fires twice
     announcer.textContent = "";
     requestAnimationFrame(() => {
       announcer.textContent =
@@ -299,9 +289,8 @@ backToDuration.addEventListener("click", () => {
   navigateTo(durationPage, durationHeading);
 });
 
-//back to joining room page (Listener leaves)
+//back to joining room page (listener leaves)
 backToJoiningRoom.addEventListener("click", () => {
-  // Tell the server to open up the spot!
   if (appState.currentRoomCode && socket.readyState === WebSocket.OPEN) {
     socket.send(
       JSON.stringify({
@@ -311,15 +300,12 @@ backToJoiningRoom.addEventListener("click", () => {
     );
   }
   
-  // Clear the listener's memory
   appState.currentRoomCode = null;
   appState.currentRole = null;
 
-  // Clear the input field and hide any lingering errors
   document.getElementById("server-input").value = "";
   document.getElementById("invalid-code-error").classList.add("hidden");
 
-  // Navigate back
   navigateTo(joiningRoomPage, joiningRoomHeading);
 });
 
@@ -340,10 +326,8 @@ const buttons = document.querySelectorAll(
 buttons.forEach(button => {
   button.addEventListener("click", () => {
 
-    // Hide the error message as soon as they make a selection
     document.getElementById("duration-error").classList.add("hidden");
 
-    //unselectes all buttons
     buttons.forEach(btn => {
       btn.classList.remove("selected");
       btn.classList.add("unselected");
@@ -351,7 +335,6 @@ buttons.forEach(button => {
 
     });
 
-    //selected button that was clicked
     button.classList.remove("unselected");
     button.classList.add("selected");
     button.setAttribute("aria-pressed", "true"); 
