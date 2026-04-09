@@ -153,7 +153,7 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   let invalidCodeError = document.getElementById("invalid-code-error");
 
   if (!roomCode || roomCode.length > 6) {
-    invalidCodeError.textContent = "Veillez entrer un code valide.";
+    invalidCodeError.textContent = "Veuillez entrer un code valide.";
     invalidCodeError.classList.remove("hidden");
     return;
   }
