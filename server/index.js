@@ -69,7 +69,7 @@ socket.on("message", (data) => {
     const VALID_SOUNDS = ["canadian", "beep", "cuckoo", "all"];
     const ROOM_CODE_REGEX = /^[A-Z2-9]{6}$/;
 
-    // Validate roomCode if present
+    // validate roomCode if present
     if (
       message.roomCode !== undefined &&
       (typeof message.roomCode !== "string" ||
@@ -81,7 +81,7 @@ socket.on("message", (data) => {
       return;
     }
 
-    // Validate sound if present
+    // validate sound if present
     if (
       message.sound !== undefined &&
       !VALID_SOUNDS.includes(message.sound)
@@ -93,7 +93,7 @@ socket.on("message", (data) => {
     }
 
     if (message.type === "pong") {
-      // Ignore pong messages used for heartbeat
+      // ignore pong messages used for heartbeat
       return;
     }
 
@@ -159,7 +159,6 @@ socket.on("message", (data) => {
       room.members.push(socket);
       socket.roomCode = message.roomCode;
 
-      // success sent to listener
       socket.send(
         JSON.stringify({
           type: "room-joined",
@@ -167,7 +166,6 @@ socket.on("message", (data) => {
         }),
       );
 
-      // notify the host someone joined
       if (room.host && room.host.readyState === WebSocket.OPEN) {
         console.log("peer-joined")
         room.host.send(
@@ -215,7 +213,6 @@ socket.on("message", (data) => {
 
       room.duration = duration;
 
-      // confirm to host
       socket.send(
         JSON.stringify({
           type: "duration-set",
@@ -223,7 +220,6 @@ socket.on("message", (data) => {
         }),
       );
 
-      // notify listener
       room.members.forEach((member) => {
         if (member !== socket && member.readyState === WebSocket.OPEN) {
           member.send(
@@ -266,7 +262,6 @@ socket.on("message", (data) => {
         return;
       }
 
-      // Forward to host so it knows listener is primed and waiting
       if (room.host && room.host.readyState === WebSocket.OPEN) {
         room.host.send(JSON.stringify({ type: "listener-ready", sound: message.sound }));
       }
@@ -295,7 +290,7 @@ socket.on("message", (data) => {
       }
 
       const leadMs = 0;
-      const listenerOffsetMs = (message.sound === "beep") ? 0 : 1000; // Sync offset
+      const listenerOffsetMs = (message.sound === "beep") ? 0 : 1000; // sync offset
 
       const now = Date.now();
       const hostStartAt = now + leadMs;
@@ -364,7 +359,6 @@ socket.on("message", (data) => {
       }
 
       if (room.host === socket) {
-        // SCENARIO A: The Host is leaving. Destroy the room.
         room.members.forEach((member) => {
           if (member !== socket && member.readyState === WebSocket.OPEN) {
             member.send(JSON.stringify({ type: "room-closed" }));
@@ -376,7 +370,6 @@ socket.on("message", (data) => {
         console.log(`Room ${roomCode} closed by host`);
 
       } else {
-        // SCENARIO B: The Listener is leaving. Keep the room open.
         room.members = room.members.filter((member) => member !== socket);
         socket.roomCode = null;
         console.log(`Listener left room ${roomCode}. Spot is now open.`);
@@ -398,7 +391,6 @@ socket.on("message", (data) => {
     if (!room) return;
 
     if (room.host === socket) {
-      // SCENARIO A: Host disconnected. Destroy the room.
       room.members.forEach((member) => {
         if (member.readyState === WebSocket.OPEN) {
           member.send(JSON.stringify({ type: "room-closed" }));
@@ -408,7 +400,6 @@ socket.on("message", (data) => {
       rooms.delete(roomCode);
       console.log(`Room ${roomCode} deleted due to host disconnect`);
     } else {
-      // SCENARIO B: Listener disconnected. Keep the room open.
       room.members = room.members.filter((member) => member !== socket);
       console.log(`Listener disconnected from room ${roomCode}. Spot is open.`);
 
@@ -419,8 +410,8 @@ socket.on("message", (data) => {
   });
 });
 
-const CLEANUP_INTERVAL = 60000; // Check every 60 seconds
-const MAX_IDLE_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+const CLEANUP_INTERVAL = 60000;
+const MAX_IDLE_TIME = 30 * 60 * 1000; 
 
 // Periodic cleanup of inactive rooms
 setInterval(() => {
@@ -430,7 +421,6 @@ setInterval(() => {
     if (now - room.lastActive > MAX_IDLE_TIME) {
       console.log(`Cleanup: Room ${code} closed due to inactivity.`);
       
-      // Notify any remaining members
       room.members.forEach((member) => {
         if (member.readyState === WebSocket.OPEN) {
           member.send(JSON.stringify({ 
@@ -441,12 +431,12 @@ setInterval(() => {
         }
       });
       
-      rooms.delete(code); // Remove from memory
+      rooms.delete(code); 
     }
   }
 }, CLEANUP_INTERVAL);
 
-// Heartbeat mechanism to keep connections alive 
+// heartbeat mechanism to keep connections alive 
 setInterval(() => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
